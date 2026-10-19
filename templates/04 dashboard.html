@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SEVT Dashboard</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Segoe UI,sans-serif;
+}
+
+body{
+    background:#07121d;
+    color:white;
+    padding:30px;
+}
+
+/* MAIN TITLE */
+
+h1{
+    text-align:center;
+    font-size:42px;
+    color:#00eaff;
+    margin-bottom:40px;
+    text-shadow:0 0 15px cyan;
+}
+
+/* SECTION TITLE */
+
+.section-title{
+    font-size:28px;
+    margin:40px 0 20px;
+    color:#00ffcc;
+    border-left:5px solid cyan;
+    padding-left:15px;
+}
+
+/* CARD CONTAINER */
+
+.container{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:20px;
+}
+
+/* ATTACK CARD */
+
+.card{
+    background:#102235;
+    border:1px solid cyan;
+    border-radius:15px;
+    padding:25px;
+    text-align:center;
+    text-decoration:none;
+    color:white;
+    position:relative;
+    transition:.3s;
+    min-height:150px;
+}
+
+.card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 0 20px cyan;
+}
+
+.card h3{
+    font-size:18px;
+    margin-bottom:12px;
+}
+
+.card p{
+    font-size:14px;
+    line-height:1.6;
+    color:#d5f9ff;
+}
+
+/* STATUS LIGHT */
+
+.status{
+    position:absolute;
+    top:15px;
+    right:15px;
+    width:15px;
+    height:15px;
+    background:gray;
+    border-radius:50%;
+    box-shadow:0 0 8px gray;
+}
+
+.completed{
+    background:lime;
+    box-shadow:0 0 15px lime;
+}
+
+/* OVERALL SCORE */
+
+.score{
+    margin-top:50px;
+    background:#102235;
+    border:2px solid #ff3b6f;
+    border-radius:20px;
+    padding:35px;
+    text-align:center;
+}
+
+.circle{
+    width:160px;
+    height:160px;
+    border-radius:50%;
+    border:8px solid #ff3b6f;
+    margin:auto;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:40px;
+    font-weight:bold;
+    margin-bottom:20px;
+}
+
+/* BUTTON */
+
+button{
+    padding:15px 30px;
+    border:none;
+    background:cyan;
+    color:black;
+    font-weight:bold;
+    font-size:16px;
+    border-radius:30px;
+    cursor:pointer;
+}
+
+button:hover{
+    box-shadow:0 0 20px cyan;
+}
+
+/* MOBILE */
+
+@media(max-width:600px){
+
+    body{
+        padding:15px;
+    }
+
+    h1{
+        font-size:32px;
+    }
+
+    .section-title{
+        font-size:24px;
+    }
+
+    .container{
+        grid-template-columns:1fr;
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- DASHBOARD TITLE -->
+
+<h1>Dashboard</h1>
+
+
+<!-- ============================= -->
+<!-- ATTACK SIMULATORS -->
+<!-- ============================= -->
+
+<h2 class="section-title">Attack Simulators</h2>
+
+
+<div class="container">
+
+
+<!-- PHISHING -->
+
+<a href="/phishing/start" class="card">
+
+    <div class="status completed"></div>
+
+    <h3>📧 Phishing Attack</h3>
+
+    <p>
+        Test your ability to detect phishing emails.
+    </p>
+
+</a>
+
+
+<!-- USB BAITING -->
+
+<a href="{{ url_for('usb_baiting.start_usb_baiting') }}" class="card">
+
+    <div class="status completed"></div>
+
+    <h3>💾 USB Baiting</h3>
+
+    <p>
+        Test your awareness of suspicious USB devices.
+    </p>
+
+</a>
+
+
+<!-- FAKE JOB OFFERS -->
+
+<a href="{{ url_for('fakejoboff.start_fakejoboff') }}" class="card">
+
+    <div class="status completed"></div>
+
+    <h3>💼 Fake Job Offers</h3>
+
+    <p>
+        Identify fraudulent and suspicious job offers.
+    </p>
+
+</a>
+
+
+<!-- PASSWORD ATTACK -->
+
+<a href="{{ url_for('password_attack.password_attack_page') }}" class="card">
+
+    <div class="status"></div>
+
+    <h3>🔑 Password Attack Simulator</h3>
+
+    <p>
+        Test your awareness of password-based attacks
+        and weak authentication practices.
+    </p>
+
+</a>
+
+
+<!-- BAITING -->
+
+<a href="{{ url_for('baiting.start_baiting') }}" class="card">
+
+    <div class="status"></div>
+
+    <h3>🎁 Baiting</h3>
+
+    <p>
+        Identify suspicious offers, devices and opportunities
+        used to manipulate users.
+    </p>
+
+</a>
+
+
+<!-- SOCIAL MEDIA PRIVACY ANALYZER -->
+
+<a
+    href="{{ url_for('social_media_privacy.start_social_media_privacy') }}"
+    class="card"
+>
+
+    <div class="status"></div>
+
+    <h3>📱 Social Media Privacy Analyzer</h3>
+
+    <p>
+        Identify privacy risks caused by oversharing,
+        public profiles and unsafe social-media practices.
+    </p>
+
+</a>
+
+
+<!-- FAKE SHOPPING WEBSITE -->
+
+<a
+    href="{{ url_for('fake_shopping.start_fake_shopping') }}"
+    class="card"
+>
+
+    <div class="status"></div>
+
+    <h3>🛒 Fake Shopping Website</h3>
+
+    <p>
+        Identify suspicious shopping websites,
+        fake offers and unsafe online purchases.
+    </p>
+
+</a>
+
+
+<!-- SMISHING -->
+
+<a href="{{ url_for('smishing.start_smishing') }}" class="card">
+
+    <div class="status"></div>
+
+    <h3>📱 Smishing</h3>
+
+    <p>
+        Identify suspicious SMS messages,
+        fake alerts and malicious links.
+    </p>
+
+</a>
+
+
+<!-- FAKE OTP REQUEST -->
+
+<a href="{{ url_for('fake_otp.start_fake_otp') }}" class="card">
+
+    <div class="status"></div>
+
+    <h3>🔐 Fake OTP Request</h3>
+
+    <p>
+        Identify suspicious OTP requests,
+        fake verification attempts and
+        social-engineering messages.
+    </p>
+
+</a>
+
+
+<!-- URL INSPECTION -->
+
+<a href="{{ url_for('url_inspection.start_url_inspection') }}" class="card">
+
+    <div class="status"></div>
+
+    <h3>🔎 URL Inspection</h3>
+
+    <p>
+        Inspect suspicious URLs,
+        identify misleading domains
+        and detect unsafe links.
+    </p>
+
+</a>
+
+
+<!-- PERMISSION CHECKER -->
+
+<a
+    href="{{ url_for('permission_checker.start_permission_checker') }}"
+    class="card"
+>
+
+    <div class="status"></div>
+
+    <h3>🔐 Permission Checker</h3>
+
+    <p>
+        Identify unnecessary app permissions,
+        suspicious access requests and
+        privacy risks.
+    </p>
+
+</a>
+
+
+<!-- AI DEEPFAKE VOICE SCAM -->
+
+<a
+    href="{{ url_for('deepfake_voice.start_deepfake_voice') }}"
+    class="card"
+>
+
+    <div class="status"></div>
+
+    <h3>🎙️ AI Deepfake Voice Scam</h3>
+
+    <p>
+        Identify AI-generated voice impersonation,
+        urgent requests and suspicious voice messages.
+    </p>
+
+</a>
+
+
+</div>
+
+
+<!-- ============================= -->
+<!-- OVERALL VULNERABILITY SCORE -->
+<!-- ============================= -->
+
+<div class="score">
+
+    <h2 style="margin-bottom:20px;">
+        Overall Vulnerability Score
+    </h2>
+
+    <div class="circle">
+        0%
+    </div>
+
+    <a href="/vulnerability-assessment"
+       style="
+       display:inline-block;
+       margin-top:20px;
+       padding:14px 28px;
+       border:1px solid #00ffff;
+       border-radius:8px;
+       color:#00ffff;
+       text-decoration:none;
+       font-weight:bold;
+       background:rgba(0,255,255,0.08);
+       transition:0.3s;
+       ">
+        🛡️ Check My Vulnerability
+    </a>
+
+</div>
+
+
+</body>
+
+</html>

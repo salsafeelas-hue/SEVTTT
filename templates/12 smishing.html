@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SEVT | Smishing Simulator</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+
+            min-height: 100vh;
+
+            background:
+                radial-gradient(
+                    circle at top left,
+                    #10263d,
+                    #050b12 45%,
+                    #010408
+                );
+
+            color: #ffffff;
+
+            padding: 30px 15px;
+
+        }
+
+        .container {
+
+            width: 100%;
+            max-width: 900px;
+
+            margin: auto;
+
+        }
+
+        /* ==================================================
+           HEADER
+        ================================================== */
+
+        .header {
+
+            text-align: center;
+
+            margin-bottom: 25px;
+
+        }
+
+        .header h1 {
+
+            font-size: 32px;
+
+            color: #00eaff;
+
+            letter-spacing: 2px;
+
+            text-shadow:
+                0 0 10px rgba(0, 234, 255, 0.4);
+
+        }
+
+        .header p {
+
+            margin-top: 8px;
+
+            color: #9fb4c7;
+
+            font-size: 15px;
+
+        }
+
+        /* ==================================================
+           PROGRESS
+        ================================================== */
+
+        .progress-box {
+
+            margin-bottom: 20px;
+
+            background: rgba(10, 25, 40, 0.9);
+
+            border: 1px solid #18384d;
+
+            border-radius: 12px;
+
+            padding: 15px 20px;
+
+        }
+
+        .progress-top {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            margin-bottom: 9px;
+
+            color: #a9c3d5;
+
+            font-size: 14px;
+
+        }
+
+        .progress-bar {
+
+            width: 100%;
+
+            height: 7px;
+
+            background: #0d1c28;
+
+            border-radius: 10px;
+
+            overflow: hidden;
+
+        }
+
+        .progress-fill {
+
+            height: 100%;
+
+            width: calc(
+                ({{ question_number }} / {{ total_questions }}) * 100%
+            );
+
+            background: #00eaff;
+
+            box-shadow:
+                0 0 10px rgba(0, 234, 255, 0.6);
+
+        }
+
+        /* ==================================================
+           PHONE
+        ================================================== */
+
+        .phone-area {
+
+            display: flex;
+
+            justify-content: center;
+
+        }
+
+        .phone {
+
+            width: 390px;
+
+            max-width: 100%;
+
+            min-height: 680px;
+
+            background: #05080d;
+
+            border: 3px solid #263644;
+
+            border-radius: 35px;
+
+            padding: 12px;
+
+            box-shadow:
+                0 0 40px rgba(0, 0, 0, 0.7),
+                0 0 20px rgba(0, 234, 255, 0.08);
+
+        }
+
+        /* ==================================================
+           PHONE TOP
+        ================================================== */
+
+        .phone-top {
+
+            height: 25px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 10px;
+
+            color: #d7e5ed;
+
+            font-size: 11px;
+
+        }
+
+        .camera {
+
+            width: 65px;
+
+            height: 18px;
+
+            background: #020305;
+
+            border-radius: 15px;
+
+            margin: auto;
+
+        }
+
+        /* ==================================================
+           SMS HEADER
+        ================================================== */
+
+        .sms-header {
+
+            margin-top: 8px;
+
+            background: #101922;
+
+            border-radius: 18px 18px 0 0;
+
+            padding: 15px;
+
+            border-bottom: 1px solid #253a49;
+
+            text-align: center;
+
+        }
+
+        .contact-icon {
+
+            width: 45px;
+
+            height: 45px;
+
+            border-radius: 50%;
+
+            margin: auto;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: #16384a;
+
+            border: 1px solid #2c6278;
+
+            font-size: 21px;
+
+        }
+
+        .sender-name {
+
+            margin-top: 7px;
+
+            font-weight: bold;
+
+            color: #ffffff;
+
+        }
+
+        .sender-number {
+
+            margin-top: 3px;
+
+            color: #7f98a9;
+
+            font-size: 12px;
+
+        }
+
+        /* ==================================================
+           SMS BODY
+        ================================================== */
+
+        .sms-screen {
+
+            min-height: 430px;
+
+            background:
+                linear-gradient(
+                    rgba(5, 10, 15, 0.96),
+                    rgba(3, 8, 12, 0.98)
+                );
+
+            padding: 25px 14px;
+
+        }
+
+        .date {
+
+            text-align: center;
+
+            color: #657b8a;
+
+            font-size: 11px;
+
+            margin-bottom: 18px;
+
+        }
+
+        .message-row {
+
+            display: flex;
+
+            justify-content: flex-start;
+
+        }
+
+        .message-bubble {
+
+            max-width: 90%;
+
+            background: #17252f;
+
+            border: 1px solid #29404d;
+
+            border-radius: 5px 18px 18px 18px;
+
+            padding: 17px;
+
+            color: #e5f0f5;
+
+            line-height: 1.65;
+
+            font-size: 14px;
+
+            box-shadow:
+                0 4px 15px rgba(0, 0, 0, 0.25);
+
+        }
+
+        .message-bubble .link {
+
+            display: block;
+
+            margin-top: 12px;
+
+            padding: 9px;
+
+            background: #0b1720;
+
+            border-radius: 8px;
+
+            color: #00d9ff;
+
+            font-size: 12px;
+
+            word-break: break-all;
+
+            border: 1px solid #1b4a5b;
+
+        }
+
+        .message-time {
+
+            display: block;
+
+            margin-top: 8px;
+
+            text-align: right;
+
+            font-size: 10px;
+
+            color: #728895;
+
+        }
+
+        /* ==================================================
+           DECISION AREA
+        ================================================== */
+
+        .decision-area {
+
+            background: #0c151d;
+
+            border-top: 1px solid #243744;
+
+            padding: 18px;
+
+            border-radius: 0 0 20px 20px;
+
+        }
+
+        .decision-title {
+
+            text-align: center;
+
+            color: #b8cad6;
+
+            font-size: 13px;
+
+            margin-bottom: 15px;
+
+        }
+
+        .option {
+
+            position: relative;
+
+            margin-bottom: 10px;
+
+        }
+
+        .option input {
+
+            position: absolute;
+
+            opacity: 0;
+
+        }
+
+        .option label {
+
+            display: block;
+
+            padding: 13px;
+
+            border: 1px solid #29404e;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            background: #0d1921;
+
+            color: #dce8ee;
+
+            text-align: center;
+
+            transition: 0.2s;
+
+        }
+
+        .option label:hover {
+
+            border-color: #00cce8;
+
+            background: #10232d;
+
+        }
+
+        .option input:checked + label {
+
+            border-color: #00eaff;
+
+            background: #10303b;
+
+            color: #00eaff;
+
+            box-shadow:
+                0 0 12px rgba(0, 234, 255, 0.12);
+
+        }
+
+        .submit-btn {
+
+            width: 100%;
+
+            margin-top: 8px;
+
+            padding: 13px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: #00cfe8;
+
+            color: #001017;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+
+        }
+
+        .submit-btn:hover {
+
+            background: #00eaff;
+
+            transform: translateY(-1px);
+
+        }
+
+        /* ==================================================
+           AWARENESS MESSAGE
+        ================================================== */
+
+        .awareness {
+
+            margin-top: 20px;
+
+            padding: 15px;
+
+            background: rgba(255, 174, 0, 0.05);
+
+            border: 1px solid rgba(255, 174, 0, 0.25);
+
+            border-radius: 10px;
+
+            color: #bfcbd2;
+
+            font-size: 12px;
+
+            line-height: 1.6;
+
+            text-align: center;
+
+        }
+
+        /* ==================================================
+           MOBILE
+        ================================================== */
+
+        @media (max-width: 500px) {
+
+            body {
+                padding: 15px 8px;
+            }
+
+            .header h1 {
+                font-size: 25px;
+            }
+
+            .phone {
+                border-radius: 25px;
+            }
+
+            .sms-screen {
+                min-height: 400px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <h1>📱 SMISHING SIMULATOR</h1>
+
+        <p>
+            Analyze the SMS before deciding whether it is safe or suspicious.
+        </p>
+
+    </div>
+
+
+    <!-- PROGRESS -->
+
+    <div class="progress-box">
+
+        <div class="progress-top">
+
+            <span>
+                SMS {{ question_number }} of {{ total_questions }}
+            </span>
+
+            <span>
+                Awareness Test
+            </span>
+
+        </div>
+
+        <div class="progress-bar">
+
+            <div class="progress-fill"></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PHONE -->
+
+    <div class="phone-area">
+
+        <div class="phone">
+
+
+            <!-- PHONE TOP -->
+
+            <div class="phone-top">
+
+                <span>9:41</span>
+
+                <div class="camera"></div>
+
+                <span>▮▮▮ ◉</span>
+
+            </div>
+
+
+            <!-- SMS HEADER -->
+
+            <div class="sms-header">
+
+                <div class="contact-icon">
+                    💬
+                </div>
+
+                <div class="sender-name">
+                    {{ scenario.sender_name }}
+                </div>
+
+                <div class="sender-number">
+                    {{ scenario.sender_number }}
+                </div>
+
+            </div>
+
+
+            <!-- SMS SCREEN -->
+
+            <div class="sms-screen">
+
+                <div class="date">
+                    Today
+                </div>
+
+
+                <div class="message-row">
+
+                    <div class="message-bubble">
+
+                        {{ scenario.message_text }}
+
+                        {% if scenario.link_text %}
+
+                        <span class="link">
+                            🔗 {{ scenario.link_text }}
+                        </span>
+
+                        {% endif %}
+
+                        <span class="message-time">
+                            10:42 AM
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- DECISION -->
+
+            <div class="decision-area">
+
+                <div class="decision-title">
+
+                    What would you do with this message?
+
+                </div>
+
+
+                <form method="POST">
+
+
+                    <div class="option">
+
+                        <input
+                            type="radio"
+                            id="safe"
+                            name="answer"
+                            value="safe"
+                            required
+                        >
+
+                        <label for="safe">
+                            ✅ Safe / Legitimate Message
+                        </label>
+
+                    </div>
+
+
+                    <div class="option">
+
+                        <input
+                            type="radio"
+                            id="scam"
+                            name="answer"
+                            value="scam"
+                        >
+
+                        <label for="scam">
+                            🚨 Smishing / Suspicious Message
+                        </label>
+
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="submit-btn"
+                    >
+                        Analyze Message →
+                    </button>
+
+
+                </form>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- AWARENESS -->
+
+    <div class="awareness">
+
+        ⚠️ <strong>Awareness Reminder:</strong>
+        Never share passwords, OTPs, banking information or
+        payment details through unexpected SMS messages.
+        Always verify suspicious messages through the organization's
+        official website or application.
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

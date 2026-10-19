@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>USB Baiting Feedback | SEVT</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+
+            min-height: 100vh;
+
+            color: white;
+
+            background:
+                radial-gradient(
+                    circle at top left,
+                    #123b32 0%,
+                    transparent 35%
+                ),
+                radial-gradient(
+                    circle at bottom right,
+                    #09251f 0%,
+                    transparent 40%
+                ),
+                linear-gradient(
+                    135deg,
+                    #020807,
+                    #061410,
+                    #020807
+                );
+
+            overflow-x: hidden;
+        }
+
+
+        /* Scan line */
+
+        body::before {
+
+            content: "";
+
+            position: fixed;
+
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 2px;
+
+            background: rgba(0, 255, 170, 0.15);
+
+            box-shadow:
+                0 0 15px rgba(0, 255, 170, 0.2);
+
+            animation: scan 5s linear infinite;
+
+            z-index: 999;
+
+            pointer-events: none;
+        }
+
+
+        @keyframes scan {
+
+            0% {
+                top: 0;
+            }
+
+            100% {
+                top: 100%;
+            }
+
+        }
+
+
+        .container {
+
+            width: 90%;
+
+            max-width: 900px;
+
+            margin: auto;
+
+            padding: 50px 0 70px;
+        }
+
+
+        /* Header */
+
+        .brand {
+
+            font-size: 25px;
+
+            font-weight: bold;
+
+            letter-spacing: 2px;
+
+            margin-bottom: 40px;
+        }
+
+
+        .brand span {
+
+            color: #00ffae;
+        }
+
+
+        /* Main card */
+
+        .feedback-card {
+
+            background:
+                rgba(7, 22, 18, 0.92);
+
+            border:
+
+                1px solid
+                rgba(0, 255, 174, 0.2);
+
+            border-radius: 20px;
+
+            padding: 40px;
+
+            box-shadow:
+
+                0 0 40px
+                rgba(0, 255, 174, 0.08);
+        }
+
+
+        /* Result heading */
+
+        .result-icon {
+
+            width: 75px;
+
+            height: 75px;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            margin: 0 auto 25px;
+
+            font-size: 38px;
+
+            font-weight: bold;
+        }
+
+
+        .correct {
+
+            background:
+                rgba(0, 255, 174, 0.12);
+
+            border:
+                2px solid #00ffae;
+
+            color: #00ffae;
+
+            box-shadow:
+                0 0 25px
+                rgba(0, 255, 174, 0.2);
+        }
+
+
+        .incorrect {
+
+            background:
+                rgba(255, 80, 80, 0.1);
+
+            border:
+                2px solid #ff6262;
+
+            color: #ff6262;
+
+            box-shadow:
+                0 0 25px
+                rgba(255, 80, 80, 0.15);
+        }
+
+
+        .heading {
+
+            text-align: center;
+
+            margin-bottom: 30px;
+        }
+
+
+        .heading h1 {
+
+            font-size: 32px;
+
+            margin-bottom: 10px;
+        }
+
+
+        .heading p {
+
+            color: #9fb1ac;
+
+            font-size: 16px;
+
+            line-height: 1.6;
+        }
+
+
+        /* Answer information */
+
+        .answer-box {
+
+            background:
+                rgba(3, 11, 9, 0.8);
+
+            border:
+
+                1px solid
+                rgba(0, 255, 174, 0.15);
+
+            border-radius: 14px;
+
+            padding: 25px;
+
+            margin-bottom: 20px;
+        }
+
+
+        .answer-row {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+            padding: 12px 0;
+
+            border-bottom:
+                1px solid
+                rgba(255, 255, 255, 0.05);
+        }
+
+
+        .answer-row:last-child {
+
+            border-bottom: none;
+        }
+
+
+        .label {
+
+            color: #8fa9a2;
+        }
+
+
+        .value {
+
+            font-weight: bold;
+
+            text-align: right;
+        }
+
+
+        .value.correct-text {
+
+            color: #00ffae;
+        }
+
+
+        .value.incorrect-text {
+
+            color: #ff6262;
+        }
+
+
+        /* Explanation */
+
+        .explanation {
+
+            background:
+                rgba(0, 255, 174, 0.04);
+
+            border-left:
+                4px solid #00ffae;
+
+            border-radius: 8px;
+
+            padding: 22px;
+
+            margin-top: 25px;
+
+            line-height: 1.7;
+
+            color: #c7d7d2;
+        }
+
+
+        .explanation h3 {
+
+            color: #00ffae;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        /* Buttons */
+
+        .actions {
+
+            text-align: center;
+
+            margin-top: 35px;
+
+            display: flex;
+
+            justify-content: center;
+
+            gap: 15px;
+
+            flex-wrap: wrap;
+        }
+
+
+        .btn {
+
+            display: inline-block;
+
+            padding: 14px 30px;
+
+            border-radius: 30px;
+
+            text-decoration: none;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.25s;
+
+        }
+
+
+        .next-btn {
+
+            background: #00ffae;
+
+            color: #02100c;
+
+            box-shadow:
+                0 0 20px
+                rgba(0, 255, 174, 0.15);
+        }
+
+
+        .next-btn:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 0 30px
+                rgba(0, 255, 174, 0.35);
+        }
+
+
+        .dashboard-btn {
+
+            border:
+                1px solid
+                rgba(0, 255, 174, 0.35);
+
+            color: #9fb1ac;
+
+            background:
+                rgba(0, 255, 174, 0.03);
+        }
+
+
+        .dashboard-btn:hover {
+
+            color: #00ffae;
+
+            border-color: #00ffae;
+        }
+
+
+        /* Progress */
+
+        .progress {
+
+            margin-top: 35px;
+
+            text-align: center;
+
+            color: #71857f;
+
+            font-size: 13px;
+        }
+
+
+        @media (max-width: 600px) {
+
+            .feedback-card {
+
+                padding: 25px;
+            }
+
+            .heading h1 {
+
+                font-size: 27px;
+            }
+
+            .answer-row {
+
+                flex-direction: column;
+
+                gap: 5px;
+            }
+
+            .value {
+
+                text-align: left;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <!-- Brand -->
+
+    <div class="brand">
+
+        S<span>EVT</span>
+
+    </div>
+
+
+    <!-- Feedback Card -->
+
+    <div class="feedback-card">
+
+
+        {% if is_correct %}
+
+        <!-- Correct -->
+
+        <div class="result-icon correct">
+
+            ✓
+
+        </div>
+
+        <div class="heading">
+
+            <h1>Correct Decision</h1>
+
+            <p>
+                Good choice. You recognized the potential risk
+                associated with an unknown USB device.
+            </p>
+
+        </div>
+
+
+        {% else %}
+
+        <!-- Incorrect -->
+
+        <div class="result-icon incorrect">
+
+            ✕
+
+        </div>
+
+        <div class="heading">
+
+            <h1>Risky Decision</h1>
+
+            <p>
+                This decision could expose the computer or organization
+                to unnecessary security risks.
+            </p>
+
+        </div>
+
+
+        {% endif %}
+
+
+        <!-- Answer Details -->
+
+        <div class="answer-box">
+
+
+            <div class="answer-row">
+
+                <span class="label">
+                    Your Answer
+                </span>
+
+                <span class="value
+                    {% if is_correct %}
+                        correct-text
+                    {% else %}
+                        incorrect-text
+                    {% endif %}
+                ">
+
+                    {{ selected_answer }}
+
+                </span>
+
+            </div>
+
+
+            <div class="answer-row">
+
+                <span class="label">
+                    Correct Answer
+                </span>
+
+                <span class="value correct-text">
+
+                    {{ scenario.correct_answer }}
+
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- Explanation -->
+
+        <div class="explanation">
+
+            <h3>
+                🔍 Why?
+            </h3>
+
+            <p>
+
+                {{ scenario.explanation }}
+
+            </p>
+
+        </div>
+
+
+        <!-- Actions -->
+
+        <div class="actions">
+
+
+            {% if current < total %}
+
+            <a
+                href="{{ url_for('usb_baiting.show_scenario') }}"
+                class="btn next-btn"
+            >
+
+                Next Scenario →
+
+            </a>
+
+            {% else %}
+
+            <a
+                href="{{ url_for('usb_baiting.result') }}"
+                class="btn next-btn"
+            >
+
+                View Final Result →
+
+            </a>
+
+            {% endif %}
+
+
+            <a
+                href="{{ url_for('dashboard.dashboard_page') }}"
+                class="btn dashboard-btn"
+            >
+
+                Dashboard
+
+            </a>
+
+
+        </div>
+
+
+        <!-- Progress -->
+
+        <div class="progress">
+
+            Scenario {{ current }} of {{ total }}
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+</body>
+
+</html>

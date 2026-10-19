@@ -1,0 +1,775 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>USB Baiting Simulator | SEVT</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            color: white;
+
+            background:
+                radial-gradient(circle at top left, #123b32 0%, transparent 35%),
+                radial-gradient(circle at bottom right, #09251f 0%, transparent 40%),
+                linear-gradient(135deg, #020807, #061410, #020807);
+
+            overflow-x: hidden;
+        }
+
+        /* Scan line */
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 2px;
+
+            background: rgba(0, 255, 170, 0.15);
+            box-shadow: 0 0 15px rgba(0, 255, 170, 0.2);
+
+            animation: scan 5s linear infinite;
+
+            z-index: 999;
+            pointer-events: none;
+        }
+
+        @keyframes scan {
+
+            0% {
+                top: 0;
+            }
+
+            100% {
+                top: 100%;
+            }
+
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1050px;
+
+            margin: auto;
+
+            padding: 35px 0 60px;
+        }
+
+        /* Header */
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 35px;
+        }
+
+        .brand {
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 2px;
+        }
+
+        .brand span {
+            color: #00ffae;
+        }
+
+        .module-number {
+            font-size: 13px;
+            color: #8fa9a2;
+
+            border: 1px solid rgba(0, 255, 174, 0.25);
+
+            padding: 8px 14px;
+
+            border-radius: 20px;
+        }
+
+        /* Title */
+
+        .title-section {
+            text-align: center;
+
+            margin-bottom: 35px;
+        }
+
+        .title-section h1 {
+            font-size: 42px;
+
+            margin-bottom: 12px;
+
+            letter-spacing: 1px;
+        }
+
+        .title-section h1 span {
+            color: #00ffae;
+        }
+
+        .title-section p {
+            color: #9bb0aa;
+
+            font-size: 16px;
+
+            line-height: 1.6;
+        }
+
+        /* Warning */
+
+        .warning {
+            border: 1px solid rgba(255, 193, 7, 0.35);
+
+            background: rgba(255, 193, 7, 0.06);
+
+            border-radius: 14px;
+
+            padding: 16px 20px;
+
+            margin-bottom: 25px;
+
+            color: #e8dca9;
+
+            line-height: 1.5;
+        }
+
+        .warning strong {
+            color: #ffd54f;
+        }
+
+        /* Scenario */
+
+        .scenario-card {
+            background: rgba(7, 22, 18, 0.88);
+
+            border: 1px solid rgba(0, 255, 174, 0.18);
+
+            border-radius: 20px;
+
+            padding: 30px;
+
+            box-shadow: 0 0 35px rgba(0, 255, 174, 0.07);
+
+            margin-bottom: 25px;
+        }
+
+        .scenario-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin-bottom: 25px;
+        }
+
+        .scenario-header h2 {
+            font-size: 22px;
+        }
+
+        .status {
+            color: #00ffae;
+
+            font-size: 12px;
+
+            border: 1px solid rgba(0, 255, 174, 0.3);
+
+            padding: 7px 12px;
+
+            border-radius: 15px;
+        }
+
+        /* USB */
+
+        .usb-area {
+            display: flex;
+            justify-content: center;
+
+            margin: 20px 0 30px;
+        }
+
+        .usb {
+            width: 250px;
+            height: 120px;
+
+            border-radius: 15px;
+
+            background: linear-gradient(135deg, #1b2724, #0b1512);
+
+            border: 1px solid rgba(0, 255, 174, 0.35);
+
+            box-shadow: 0 0 25px rgba(0, 255, 174, 0.08);
+
+            position: relative;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .usb-body {
+            width: 150px;
+            height: 75px;
+
+            background: #121d1a;
+
+            border: 2px solid #64756f;
+
+            border-radius: 10px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            color: #00ffae;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            letter-spacing: 1px;
+        }
+
+        .usb-connector {
+            position: absolute;
+
+            right: -28px;
+
+            width: 32px;
+            height: 45px;
+
+            background: #9da5a2;
+
+            border-radius: 3px;
+
+            border: 2px solid #626b68;
+        }
+
+        .usb-light {
+            position: absolute;
+
+            left: 25px;
+            top: 20px;
+
+            width: 8px;
+            height: 8px;
+
+            border-radius: 50%;
+
+            background: #00ffae;
+
+            box-shadow: 0 0 12px #00ffae;
+        }
+
+        /* Message */
+
+        .message {
+            background: #030b09;
+
+            border-left: 4px solid #00ffae;
+
+            border-radius: 8px;
+
+            padding: 20px;
+
+            color: #d3dfdc;
+
+            line-height: 1.7;
+
+            margin-bottom: 25px;
+        }
+
+        .message .highlight {
+            color: #00ffae;
+
+            font-weight: bold;
+        }
+
+        /* Question */
+
+        .question {
+            font-size: 20px;
+
+            margin-bottom: 20px;
+        }
+
+        /* Choices */
+
+        .choices {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 15px;
+        }
+
+        .choice {
+            background: rgba(13, 34, 29, 0.8);
+
+            color: white;
+
+            border: 1px solid rgba(0, 255, 174, 0.18);
+
+            border-radius: 12px;
+
+            padding: 18px;
+
+            text-align: left;
+
+            cursor: pointer;
+
+            transition: 0.25s;
+
+            font-size: 15px;
+
+            line-height: 1.5;
+
+            width: 100%;
+        }
+
+        .choice:hover {
+            transform: translateY(-3px);
+
+            border-color: #00ffae;
+
+            box-shadow: 0 0 18px rgba(0, 255, 174, 0.12);
+        }
+
+        .choice.selected {
+            border-color: #00ffae;
+
+            background: rgba(0, 255, 174, 0.08);
+        }
+
+        .choice-number {
+            color: #00ffae;
+
+            font-weight: bold;
+
+            margin-right: 8px;
+        }
+
+        /* Submit */
+
+        .action {
+            text-align: center;
+
+            margin-top: 28px;
+        }
+
+        .submit-btn {
+            border: none;
+
+            background: #00ffae;
+
+            color: #02100c;
+
+            font-weight: bold;
+
+            padding: 14px 35px;
+
+            border-radius: 30px;
+
+            font-size: 16px;
+
+            cursor: pointer;
+
+            transition: 0.25s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+
+            box-shadow: 0 0 25px rgba(0, 255, 174, 0.35);
+        }
+
+        /* Tips */
+
+        .tip-card {
+            background: rgba(5, 18, 15, 0.75);
+
+            border: 1px solid rgba(0, 255, 174, 0.12);
+
+            border-radius: 16px;
+
+            padding: 25px;
+
+            margin-top: 25px;
+        }
+
+        .tip-card h3 {
+            color: #00ffae;
+
+            margin-bottom: 15px;
+        }
+
+        .tip-card ul {
+            padding-left: 20px;
+
+            color: #9fb1ac;
+
+            line-height: 1.8;
+        }
+
+        /* Back */
+
+        .back {
+            text-align: center;
+
+            margin-top: 30px;
+        }
+
+        .back a {
+            color: #9fb1ac;
+
+            text-decoration: none;
+
+            font-size: 14px;
+        }
+
+        .back a:hover {
+            color: #00ffae;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 700px) {
+
+            .title-section h1 {
+                font-size: 32px;
+            }
+
+            .choices {
+                grid-template-columns: 1fr;
+            }
+
+            .scenario-card {
+                padding: 20px;
+            }
+
+            .header {
+                align-items: flex-start;
+            }
+
+            .module-number {
+                font-size: 11px;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <!-- Header -->
+
+    <div class="header">
+
+        <div class="brand">
+            S<span>EVT</span>
+        </div>
+
+        <div class="module-number">
+            MODULE 05 • USB BAITING
+        </div>
+
+    </div>
+
+
+    <!-- Title -->
+
+    <div class="title-section">
+
+        <h1>
+            USB <span>Baiting</span> Simulator
+        </h1>
+
+        <p>
+            Test how you respond when an unknown USB device is deliberately
+            placed where you might find it.
+        </p>
+
+    </div>
+
+
+    <!-- Warning -->
+
+    <div class="warning">
+
+        <strong>⚠ Awareness Simulation:</strong>
+
+        This is a safe simulated scenario.
+        Do not connect unknown USB devices to your real computer.
+        Attackers can use removable media as a method of social engineering.
+
+    </div>
+
+
+    <!-- Scenario -->
+
+    <div class="scenario-card">
+
+        <div class="scenario-header">
+
+            <h2>
+                Scenario {{ current }} of {{ total }}
+            </h2>
+
+            <div class="status">
+                ● SIMULATION ACTIVE
+            </div>
+
+        </div>
+
+
+        <!-- USB -->
+
+        <div class="usb-area">
+
+            <div class="usb">
+
+                <div class="usb-light"></div>
+
+                <div class="usb-body">
+                    CONFIDENTIAL
+                </div>
+
+                <div class="usb-connector"></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- Scenario text -->
+
+        <div class="message">
+
+            You arrive at your college computer lab and notice a USB drive
+            lying near your computer.
+
+            <br><br>
+
+            The USB has a label saying:
+
+            <span class="highlight">
+                "CONFIDENTIAL — EXAM RESULTS"
+            </span>
+
+            <br><br>
+
+            Nobody nearby claims ownership of it. You are curious because
+            you need to access your computer for an assignment.
+
+        </div>
+
+
+        <!-- Question -->
+
+        <div class="question">
+
+            <strong>What would you do?</strong>
+
+        </div>
+
+
+        <!-- ANSWER FORM -->
+
+        <form method="POST" action="/usb-baiting/answer">
+
+            <div class="choices">
+
+                <button
+                    type="button"
+                    class="choice"
+                    onclick="selectChoice(this, 'A')">
+
+                    <span class="choice-number">A.</span>
+
+                    Plug the USB into the computer to identify its owner.
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="choice"
+                    onclick="selectChoice(this, 'B')">
+
+                    <span class="choice-number">B.</span>
+
+                    Give it to the lab administrator or responsible authority
+                    without connecting it.
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="choice"
+                    onclick="selectChoice(this, 'C')">
+
+                    <span class="choice-number">C.</span>
+
+                    Open the USB on your computer but avoid opening suspicious
+                    files.
+
+                </button>
+
+
+                <button
+                    type="button"
+                    class="choice"
+                    onclick="selectChoice(this, 'D')">
+
+                    <span class="choice-number">D.</span>
+
+                    Take the USB home and check it on your personal computer.
+
+                </button>
+
+            </div>
+
+
+            <!-- Hidden answer sent to Flask -->
+
+            <input
+                type="hidden"
+                name="answer"
+                id="answer"
+                value=""
+            >
+
+
+            <!-- Submit -->
+
+            <div class="action">
+
+                <button
+                    type="submit"
+                    class="submit-btn"
+                    onclick="return validateAnswer()">
+
+                    Submit Decision
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <!-- Safety Tips -->
+
+    <div class="tip-card">
+
+        <h3>🛡 USB Safety Tips</h3>
+
+        <ul>
+
+            <li>
+                Never connect an unknown USB device to your computer.
+            </li>
+
+            <li>
+                Do not open unknown files or programs from removable media.
+            </li>
+
+            <li>
+                Report found USB devices to an administrator or IT department.
+            </li>
+
+            <li>
+                Attackers may intentionally leave USB devices in public places.
+            </li>
+
+            <li>
+                Curiosity and urgency can be used to manipulate victims.
+            </li>
+
+        </ul>
+
+    </div>
+
+
+    <!-- Back -->
+
+    <div class="back">
+
+        <a href="/dashboard">
+            ← Back to Dashboard
+        </a>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    let selectedAnswer = null;
+
+
+    function selectChoice(button, answer) {
+
+        // Remove previous selection
+
+        document.querySelectorAll(".choice").forEach(function(choice) {
+
+            choice.classList.remove("selected");
+
+        });
+
+
+        // Select current button
+
+        button.classList.add("selected");
+
+
+        // Store answer
+
+        selectedAnswer = answer;
+
+
+        // Put answer into hidden form field
+
+        document.getElementById("answer").value = answer;
+
+    }
+
+
+    function validateAnswer() {
+
+        if (selectedAnswer === null) {
+
+            alert("Please select an option before submitting your decision.");
+
+            return false;
+
+        }
+
+        return true;
+
+    }
+
+</script>
+
+
+</body>
+</html>

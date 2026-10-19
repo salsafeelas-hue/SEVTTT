@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Permission Security Simulator</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+
+            background:
+                radial-gradient(
+                    circle at top left,
+                    #10283d,
+                    #02070d 55%,
+                    #010306
+                );
+
+            color: #e8faff;
+
+            padding: 30px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            margin: auto;
+        }
+
+        /* HEADER */
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            color: #00eaff;
+            font-size: 30px;
+            letter-spacing: 2px;
+        }
+
+        .header p {
+            color: #8faab6;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        /* PROGRESS */
+
+        .progress-box {
+            background: rgba(5, 20, 32, 0.92);
+
+            border: 1px solid #12394b;
+
+            padding: 15px;
+
+            border-radius: 12px;
+
+            margin-bottom: 20px;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+
+            color: #8faebd;
+
+            font-size: 13px;
+
+            margin-bottom: 10px;
+        }
+
+        .progress {
+            height: 7px;
+
+            background: #10202a;
+
+            border-radius: 10px;
+
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+
+            width: {{ (question_number / total_questions) * 100 }}%;
+
+            background: #00eaff;
+        }
+
+        /* DEVICE */
+
+        .device {
+            background: #07131d;
+
+            border: 1px solid #16465b;
+
+            border-radius: 25px;
+
+            padding: 25px;
+
+            box-shadow:
+                0 0 35px rgba(0, 234, 255, 0.08);
+        }
+
+        /* DEVICE HEADER */
+
+        .device-header {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            padding-bottom: 18px;
+
+            border-bottom: 1px solid #143442;
+
+            margin-bottom: 20px;
+        }
+
+        .device-title {
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+        }
+
+        .app-icon {
+            width: 50px;
+            height: 50px;
+
+            border-radius: 13px;
+
+            background: #092d3c;
+
+            border: 1px solid #00aeca;
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            font-size: 25px;
+        }
+
+        .app-info h2 {
+            font-size: 19px;
+
+            color: #ffffff;
+        }
+
+        .app-info p {
+            color: #6f8b98;
+
+            font-size: 12px;
+
+            margin-top: 4px;
+        }
+
+        .security-badge {
+            color: #00eaff;
+
+            font-size: 11px;
+
+            border: 1px solid #176277;
+
+            padding: 7px 10px;
+
+            border-radius: 20px;
+        }
+
+        /* SCENARIO */
+
+        .scenario {
+            background: #0b1c27;
+
+            border: 1px solid #173f50;
+
+            border-radius: 15px;
+
+            padding: 20px;
+
+            margin-bottom: 20px;
+        }
+
+        .scenario-label {
+            color: #00eaff;
+
+            font-size: 11px;
+
+            letter-spacing: 1.5px;
+
+            margin-bottom: 10px;
+
+            text-transform: uppercase;
+        }
+
+        .scenario h2 {
+            color: #ffffff;
+
+            font-size: 21px;
+
+            margin-bottom: 12px;
+        }
+
+        .scenario-text {
+            color: #c0d3da;
+
+            line-height: 1.7;
+
+            font-size: 15px;
+        }
+
+        /* PERMISSION REQUEST */
+
+        .permission-title {
+            color: #ffffff;
+
+            font-size: 18px;
+
+            margin-bottom: 15px;
+        }
+
+        .permissions {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 12px;
+
+            margin-bottom: 25px;
+        }
+
+        .permission {
+            background: #081720;
+
+            border: 1px solid #173746;
+
+            border-radius: 12px;
+
+            padding: 15px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+        }
+
+        .permission-icon {
+            font-size: 23px;
+        }
+
+        .permission span {
+            color: #c6d9df;
+
+            font-size: 14px;
+
+            line-height: 1.4;
+        }
+
+        /* WARNING */
+
+        .warning {
+            background:
+                rgba(255, 170, 0, 0.07);
+
+            border:
+                1px solid rgba(255, 170, 0, 0.30);
+
+            border-radius: 12px;
+
+            padding: 15px;
+
+            color: #d5c08c;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+
+            margin-bottom: 25px;
+        }
+
+        .warning strong {
+            color: #ffc857;
+        }
+
+        /* QUESTION */
+
+        .question {
+            font-size: 20px;
+
+            color: #ffffff;
+
+            margin-bottom: 18px;
+        }
+
+        /* OPTIONS */
+
+        .options {
+            display: flex;
+
+            flex-direction: column;
+
+            gap: 12px;
+        }
+
+        .option input {
+            display: none;
+        }
+
+        .option label {
+            display: block;
+
+            padding: 17px;
+
+            background: #0a1b25;
+
+            border:
+                1px solid #1a4050;
+
+            border-radius: 12px;
+
+            color: #c7dbe3;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .option label:hover {
+            border-color: #00cce8;
+
+            background: #0d2633;
+
+            transform: translateY(-1px);
+        }
+
+        .option input:checked + label {
+            border-color: #00eaff;
+
+            background: #0c3040;
+
+            color: #ffffff;
+
+            box-shadow:
+                0 0 15px
+                rgba(0, 234, 255, 0.12);
+        }
+
+        /* BUTTON */
+
+        .submit-btn {
+            width: 100%;
+
+            margin-top: 25px;
+
+            padding: 16px;
+
+            border: none;
+
+            border-radius: 12px;
+
+            background: #00cfe8;
+
+            color: #001018;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .submit-btn:hover {
+            background: #35e7fa;
+        }
+
+        /* FOOTER */
+
+        .footer-note {
+            text-align: center;
+
+            color: #607b88;
+
+            font-size: 11px;
+
+            line-height: 1.6;
+
+            margin-top: 20px;
+        }
+
+        /* MOBILE */
+
+        @media(max-width: 650px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .permissions {
+                grid-template-columns: 1fr;
+            }
+
+            .device {
+                padding: 18px;
+            }
+
+            .security-badge {
+                display: none;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <h1>🔐 PERMISSION SECURITY CHECK</h1>
+
+        <p>
+            Review the requested permissions before allowing access.
+        </p>
+
+    </div>
+
+
+    <!-- PROGRESS -->
+
+    <div class="progress-box">
+
+        <div class="progress-text">
+
+            <span>
+                Scenario {{ question_number }}
+            </span>
+
+            <span>
+                {{ question_number }} / {{ total_questions }}
+            </span>
+
+        </div>
+
+        <div class="progress">
+
+            <div class="progress-bar"></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- DEVICE -->
+
+    <div class="device">
+
+
+        <!-- APP HEADER -->
+
+        <div class="device-header">
+
+            <div class="device-title">
+
+                <div class="app-icon">
+                    📱
+                </div>
+
+                <div class="app-info">
+
+                    <h2>
+                        {{ scenario.app_name }}
+                    </h2>
+
+                    <p>
+                        {{ scenario.app_type }}
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="security-badge">
+
+                PERMISSION REQUEST
+
+            </div>
+
+        </div>
+
+
+        <!-- SCENARIO -->
+
+        <div class="scenario">
+
+            <div class="scenario-label">
+                Permission Alert
+            </div>
+
+            <h2>
+                {{ scenario.scenario_title }}
+            </h2>
+
+            <div class="scenario-text">
+
+                {{ scenario.scenario_text }}
+
+            </div>
+
+        </div>
+
+
+        <!-- REQUESTED PERMISSIONS -->
+
+        <div class="permission-title">
+
+            This application is requesting access to:
+
+        </div>
+
+
+        <div class="permissions">
+
+
+            <div class="permission">
+
+                <div class="permission-icon">
+                    🔐
+                </div>
+
+                <span>
+                    {{ scenario.permission_1 }}
+                </span>
+
+            </div>
+
+
+            <div class="permission">
+
+                <div class="permission-icon">
+                    👤
+                </div>
+
+                <span>
+                    {{ scenario.permission_2 }}
+                </span>
+
+            </div>
+
+
+            <div class="permission">
+
+                <div class="permission-icon">
+                    🎙️
+                </div>
+
+                <span>
+                    {{ scenario.permission_3 }}
+                </span>
+
+            </div>
+
+
+            <div class="permission">
+
+                <div class="permission-icon">
+                    📍
+                </div>
+
+                <span>
+                    {{ scenario.permission_4 }}
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- SECURITY WARNING -->
+
+        <div class="warning">
+
+            ⚠️ <strong>Think before allowing access.</strong>
+
+            <br>
+
+            Consider whether these permissions are actually
+            necessary for the application's main purpose.
+            Unrelated access to sensitive information can
+            create privacy and security risks.
+
+        </div>
+
+
+        <!-- FORM -->
+
+        <form method="POST">
+
+
+            <div class="question">
+
+                What would you do?
+
+            </div>
+
+
+            <div class="options">
+
+
+                <div class="option">
+
+                    <input
+                        type="radio"
+                        name="answer"
+                        value="1"
+                        id="option1"
+                        required
+                    >
+
+                    <label for="option1">
+
+                        ① {{ scenario.permission_1 }}
+
+                    </label>
+
+                </div>
+
+
+                <div class="option">
+
+                    <input
+                        type="radio"
+                        name="answer"
+                        value="2"
+                        id="option2"
+                    >
+
+                    <label for="option2">
+
+                        ② {{ scenario.permission_2 }}
+
+                    </label>
+
+                </div>
+
+
+                <div class="option">
+
+                    <input
+                        type="radio"
+                        name="answer"
+                        value="3"
+                        id="option3"
+                    >
+
+                    <label for="option3">
+
+                        ③ {{ scenario.permission_3 }}
+
+                    </label>
+
+                </div>
+
+
+                <div class="option">
+
+                    <input
+                        type="radio"
+                        name="answer"
+                        value="4"
+                        id="option4"
+                    >
+
+                    <label for="option4">
+
+                        ④ {{ scenario.permission_4 }}
+
+                    </label>
+
+                </div>
+
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="submit-btn"
+            >
+
+                Analyze My Decision →
+
+            </button>
+
+
+        </form>
+
+
+        <div class="footer-note">
+
+            SEVT — Social Engineering Vulnerability Tester<br>
+
+            Educational security awareness simulation.
+            Do not grant permissions to unknown applications
+            without reviewing their purpose.
+
+        </div>
+
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

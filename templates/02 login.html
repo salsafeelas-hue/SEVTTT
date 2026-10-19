@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SEVT - Login</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Segoe UI, sans-serif;
+}
+
+body{
+    height:100vh;
+    overflow:hidden;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:
+    linear-gradient(rgba(0,255,255,.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,255,.08) 1px, transparent 1px),
+    radial-gradient(circle at center,#07121f,#01070f 75%);
+    background-size:45px 45px;
+    position:relative;
+}
+
+/* Scanner Line */
+
+body::before{
+    content:"";
+    position:absolute;
+    top:-5px;
+    left:0;
+    width:100%;
+    height:3px;
+    background:cyan;
+    box-shadow:0 0 20px cyan;
+    animation:scan 5s linear infinite;
+}
+
+@keyframes scan{
+    0%{top:-5px;}
+    100%{top:100%;}
+}
+
+/* Binary Code */
+
+.binary{
+    position:absolute;
+    font-family:monospace;
+    font-size:22px;
+    color:rgba(0,255,255,.12);
+    animation:float 10s ease-in-out infinite;
+}
+
+.b1{top:8%;left:8%;}
+.b2{top:18%;right:10%;}
+.b3{bottom:15%;left:12%;}
+.b4{bottom:20%;right:12%;}
+
+@keyframes float{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-18px);}
+}
+
+/* Floating Icons */
+
+.icon{
+    position:absolute;
+    color:rgba(0,255,255,.3);
+    font-size:36px;
+    animation:move 6s ease-in-out infinite;
+}
+
+.i1{top:18%;left:22%;}
+.i2{top:20%;right:20%;}
+.i3{bottom:15%;left:18%;}
+.i4{bottom:18%;right:20%;}
+
+@keyframes move{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-15px);}
+}
+
+/* Circuit Corners */
+
+.corner1,.corner2{
+    position:absolute;
+    width:220px;
+    height:220px;
+    border:2px solid rgba(0,255,255,.2);
+}
+
+.corner1{
+    top:20px;
+    left:20px;
+    border-right:none;
+    border-bottom:none;
+}
+
+.corner2{
+    bottom:20px;
+    right:20px;
+    border-left:none;
+    border-top:none;
+}
+
+/* Login Card */
+
+.container{
+    width:400px;
+    padding:40px;
+    text-align:center;
+    background:rgba(255,255,255,.05);
+    backdrop-filter:blur(10px);
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:20px;
+    box-shadow:0 0 30px rgba(0,255,255,.15);
+    z-index:2;
+}
+
+.logo{
+    font-size:55px;
+    color:#00ffff;
+    text-shadow:0 0 15px cyan;
+    margin-bottom:5px;
+    letter-spacing:3px;
+}
+
+.subtitle{
+    color:#d7f9ff;
+    margin-bottom:35px;
+    font-size:16px;
+}
+
+.input-box{
+    position:relative;
+    margin-bottom:22px;
+}
+
+.input-box i{
+    position:absolute;
+    left:15px;
+    top:50%;
+    transform:translateY(-50%);
+    color:cyan;
+}
+
+.input-box input{
+    width:100%;
+    padding:14px 14px 14px 45px;
+    border:1px solid rgba(0,255,255,.4);
+    border-radius:30px;
+    background:rgba(255,255,255,.08);
+    color:white;
+    outline:none;
+    font-size:16px;
+}
+
+.input-box input::placeholder{
+    color:#cfd8dc;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    margin-top:10px;
+    border:none;
+    border-radius:30px;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+    background:transparent;
+    color:cyan;
+    border:2px solid cyan;
+    transition:.3s;
+    box-shadow:0 0 15px rgba(0,255,255,.4);
+}
+
+button:hover{
+    background:cyan;
+    color:black;
+    box-shadow:0 0 25px cyan;
+}
+
+.links{
+    margin-top:20px;
+    font-size:15px;
+}
+
+.links a{
+    color:#7defff;
+    text-decoration:none;
+}
+
+.links a:hover{
+    text-decoration:underline;
+}
+
+@media(max-width:500px){
+
+.container{
+    width:90%;
+}
+
+.logo{
+    font-size:42px;
+}
+
+.icon{
+    display:none;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="corner1"></div>
+<div class="corner2"></div>
+
+<div class="binary b1">010101100101</div>
+<div class="binary b2">110101001010</div>
+<div class="binary b3">101001010111</div>
+<div class="binary b4">011001101010</div>
+
+<i class="fas fa-lock icon i1"></i>
+<i class="fas fa-shield-halved icon i2"></i>
+<i class="fas fa-key icon i3"></i>
+<i class="fas fa-user-secret icon i4"></i>
+
+<div class="container">
+
+<div class="logo">SEVT</div>
+
+<div class="subtitle">
+Social Engineering Vulnerability Tester using AI
+</div>
+
+<form action="/login" method="POST">
+
+<div class="input-box">
+<i class="fas fa-user"></i>
+<input
+    type="email"
+    name="email"
+    placeholder="Email Address"
+    required>
+</div>
+
+<div class="input-box">
+<i class="fas fa-lock"></i>
+<input
+    type="password"
+    name="password"
+    placeholder="Password"
+    required>
+</div>
+
+<button type="submit">
+Login
+</button>
+
+<div class="links">
+<a href="forgotpassword.html">Forgot Password?</a>
+<br><br>
+Don't have an account?
+<a href="/register">Register</a>
+</div>
+
+</form>
+
+</div>
+
+</body>
+</html>

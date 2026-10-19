@@ -1,0 +1,2187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SEVT - Security Assessment Report</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        body {
+
+            font-family: Arial, Helvetica, sans-serif;
+
+            min-height: 100vh;
+
+            color: #e8faff;
+
+            background:
+
+                radial-gradient(
+                    circle at top left,
+                    #071d2d,
+                    #020a12 45%,
+                    #010509
+                );
+
+            padding: 40px 20px;
+
+            overflow-x: hidden;
+
+        }
+
+
+        body::before {
+
+            content: "";
+
+            position: fixed;
+
+            inset: 0;
+
+            background-image:
+
+                linear-gradient(
+                    rgba(0, 220, 255, 0.035) 1px,
+                    transparent 1px
+                ),
+
+                linear-gradient(
+                    90deg,
+                    rgba(0, 220, 255, 0.035) 1px,
+                    transparent 1px
+                );
+
+            background-size: 40px 40px;
+
+            pointer-events: none;
+
+            z-index: -1;
+
+        }
+
+
+        .container {
+
+            width: 100%;
+
+            max-width: 1050px;
+
+            margin: auto;
+
+        }
+
+
+        /* HEADER */
+
+        .header {
+
+            text-align: center;
+
+            margin-bottom: 35px;
+
+        }
+
+
+        .header .logo {
+
+            font-size: 15px;
+
+            letter-spacing: 5px;
+
+            color: #00eaff;
+
+            margin-bottom: 12px;
+
+            font-weight: bold;
+
+        }
+
+
+        .header h1 {
+
+            font-size: 38px;
+
+            letter-spacing: 2px;
+
+            color: #ffffff;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .header p {
+
+            color: #8faeba;
+
+            font-size: 15px;
+
+        }
+
+
+        /* SCORE CARD */
+
+        .score-card {
+
+            background:
+
+                linear-gradient(
+                    145deg,
+                    rgba(9, 30, 44, 0.95),
+                    rgba(2, 12, 20, 0.98)
+                );
+
+            border: 1px solid rgba(0, 234, 255, 0.25);
+
+            border-radius: 18px;
+
+            padding: 35px;
+
+            text-align: center;
+
+            box-shadow:
+
+                0 0 35px rgba(0, 234, 255, 0.08);
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .score-label {
+
+            color: #8faeba;
+
+            font-size: 14px;
+
+            letter-spacing: 2px;
+
+            text-transform: uppercase;
+
+            margin-bottom: 15px;
+
+        }
+
+
+        .score {
+
+            font-size: 72px;
+
+            font-weight: bold;
+
+            color: #00eaff;
+
+            line-height: 1;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .risk {
+
+            display: inline-block;
+
+            padding: 10px 22px;
+
+            border-radius: 30px;
+
+            border: 1px solid rgba(0, 234, 255, 0.3);
+
+            color: #ffffff;
+
+            background: rgba(0, 234, 255, 0.08);
+
+            font-weight: bold;
+
+            letter-spacing: 1px;
+
+        }
+
+
+        /* SECTIONS */
+
+        .section {
+
+            background:
+
+                rgba(3, 16, 25, 0.92);
+
+            border: 1px solid rgba(0, 234, 255, 0.18);
+
+            border-radius: 16px;
+
+            padding: 28px;
+
+            margin-bottom: 22px;
+
+            box-shadow:
+
+                0 0 25px rgba(0, 0, 0, 0.25);
+
+        }
+
+
+        .section h2 {
+
+            color: #00eaff;
+
+            font-size: 20px;
+
+            margin-bottom: 22px;
+
+            letter-spacing: 0.5px;
+
+        }
+
+
+        /* INFORMATION GRID */
+
+        .info-grid {
+
+            display: grid;
+
+            grid-template-columns:
+
+                repeat(2, 1fr);
+
+            gap: 15px;
+
+        }
+
+
+        .info-box {
+
+            padding: 20px;
+
+            background: rgba(0, 234, 255, 0.035);
+
+            border: 1px solid rgba(0, 234, 255, 0.12);
+
+            border-radius: 12px;
+
+        }
+
+
+        .info-box span {
+
+            display: block;
+
+            color: #7994a0;
+
+            font-size: 13px;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .info-box strong {
+
+            color: #ffffff;
+
+            font-size: 18px;
+
+        }
+
+
+        /* MESSAGE */
+
+        .message {
+
+            padding: 22px;
+
+            border-left: 3px solid #00eaff;
+
+            background: rgba(0, 234, 255, 0.045);
+
+            color: #c6dbe2;
+
+            line-height: 1.7;
+
+            border-radius: 0 10px 10px 0;
+
+        }
+
+
+        /* ADVICE */
+
+        .advice {
+
+            background: rgba(0, 234, 255, 0.025);
+
+            border-radius: 12px;
+
+            padding: 22px;
+
+        }
+
+
+        .advice ul {
+
+            padding-left: 22px;
+
+        }
+
+
+        .advice li {
+
+            margin-bottom: 14px;
+
+            color: #b9ced5;
+
+            line-height: 1.6;
+
+        }
+
+
+        .advice li:last-child {
+
+            margin-bottom: 0;
+
+        }
+
+
+        /* BUTTONS */
+
+        .buttons {
+
+            display: flex;
+
+            justify-content: center;
+
+            gap: 15px;
+
+            flex-wrap: wrap;
+
+            margin-top: 30px;
+
+        }
+
+
+        .btn {
+
+            display: inline-block;
+
+            text-decoration: none;
+
+            padding: 13px 26px;
+
+            border-radius: 9px;
+
+            color: #001017;
+
+            background: #00eaff;
+
+            font-weight: bold;
+
+            transition: 0.25s ease;
+
+            border: 1px solid #00eaff;
+
+        }
+
+
+        .btn:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow:
+
+                0 0 20px rgba(0, 234, 255, 0.4);
+
+        }
+
+
+        .btn.secondary {
+
+            color: #00eaff;
+
+            background: transparent;
+
+        }
+
+
+        .btn.secondary:hover {
+
+            background: rgba(0, 234, 255, 0.08);
+
+        }
+
+
+        /* FOOTER */
+
+        .footer {
+
+            text-align: center;
+
+            margin-top: 35px;
+
+            color: #607985;
+
+            font-size: 12px;
+
+            line-height: 1.7;
+
+        }
+
+
+        /* RESPONSIVE */
+
+        @media (max-width: 700px) {
+
+            body {
+
+                padding: 25px 12px;
+
+            }
+
+
+            .header h1 {
+
+                font-size: 28px;
+
+            }
+
+
+            .score {
+
+                font-size: 55px;
+
+            }
+
+
+            .score-card {
+
+                padding: 25px 18px;
+
+            }
+
+
+            .section {
+
+                padding: 20px;
+
+            }
+
+
+            .info-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div class="logo">
+            SEVT
+        </div>
+
+        <h1>
+            Security Assessment Report
+        </h1>
+
+        <p>
+            Social Engineering Vulnerability Tester
+        </p>
+
+    </div>
+
+
+
+    <!-- SCORE -->
+
+    <div class="score-card">
+
+        <div class="score-label">
+            Vulnerability Assessment Score
+        </div>
+
+
+        <div class="score">
+            {{ percentage }}/100
+        </div>
+
+
+        <div class="risk">
+            {{ risk }}
+        </div>
+
+    </div>
+
+
+
+    <!-- ====================================================== -->
+    <!-- PHISHING -->
+    <!-- ====================================================== -->
+
+    {% if module_name == "Phishing Attack" %}
+
+
+    <div class="section">
+
+        <h2>
+            🎣 Phishing Attack Analysis
+        </h2>
+
+
+        <div class="info-grid">
+
+
+            <div class="info-box">
+
+                <span>
+                    Module
+                </span>
+
+                <strong>
+                    Phishing Attack
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    Scenarios
+                </span>
+
+                <strong>
+                    {{ total }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    Correct Decisions
+                </span>
+
+                <strong>
+                    {{ score }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    Incorrect Decisions
+                </span>
+
+                <strong>
+                    {{ total - score }}
+                </strong>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <h2>
+            🧠 Phishing Awareness Assessment
+        </h2>
+
+        <div class="message">
+
+            {{ feedback }}
+
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <h2>
+            🛡️ Phishing Protection
+        </h2>
+
+
+        <div class="advice">
+
+            <ul>
+
+                <li>
+                    Check the sender address carefully before responding.
+                </li>
+
+                <li>
+                    Do not click suspicious links in unexpected messages.
+                </li>
+
+                <li>
+                    Never share passwords, OTPs or banking credentials.
+                </li>
+
+                <li>
+                    Be cautious with urgent account warnings.
+                </li>
+
+                <li>
+                    Verify suspicious requests through official channels.
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ====================================================== -->
+    <!-- FAKE JOB -->
+    <!-- ====================================================== -->
+
+    {% elif module_name == "Fake Job Offers" %}
+
+
+    <div class="section">
+
+        <h2>
+            💼 Fake Job Offer Analysis
+        </h2>
+
+
+        <div class="info-grid">
+
+
+            <div class="info-box">
+
+                <span>
+                    Module
+                </span>
+
+                <strong>
+                    Fake Job Offers
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    Job Scenarios
+                </span>
+
+                <strong>
+                    {{ total }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    Correct Decisions
+                </span>
+
+                <strong>
+                    {{ score }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    Incorrect Decisions
+                </span>
+
+                <strong>
+                    {{ total - score }}
+                </strong>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <h2>
+            🧠 Job Scam Awareness
+        </h2>
+
+        <div class="message">
+
+            {{ feedback }}
+
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <h2>
+            🛡️ Job Scam Protection
+        </h2>
+
+
+        <div class="advice">
+
+            <ul>
+
+                <li>
+                    Verify job opportunities through the company's official careers page.
+                </li>
+
+                <li>
+                    Be suspicious of employers requesting money before employment.
+                </li>
+
+                <li>
+                    Do not provide sensitive banking information during an unexpected recruitment process.
+                </li>
+
+                <li>
+                    Check the recruiter's email domain carefully.
+                </li>
+
+                <li>
+                    Be cautious of unrealistic salaries and guaranteed employment.
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ====================================================== -->
+    <!-- PASSWORD ATTACK -->
+    <!-- ====================================================== -->
+
+    {% elif module_name == "Password Attack Simulator" %}
+
+
+    <div class="section">
+
+        <h2>
+            🔐 Password Attack Analysis
+        </h2>
+
+
+        <div class="info-grid">
+
+
+            <div class="info-box">
+
+                <span>
+                    Module
+                </span>
+
+                <strong>
+                    Password Attack Simulator
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    Scenarios
+                </span>
+
+                <strong>
+                    {{ total }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    Correct Decisions
+                </span>
+
+                <strong>
+                    {{ score }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    Incorrect Decisions
+                </span>
+
+                <strong>
+                    {{ total - score }}
+                </strong>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <h2>
+            🧠 Password Security Assessment
+        </h2>
+
+        <div class="message">
+
+            {{ feedback }}
+
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <h2>
+            🛡️ Password Protection
+        </h2>
+
+
+        <div class="advice">
+
+            <ul>
+
+                <li>
+                    Use long and unique passwords for important accounts.
+                </li>
+
+                <li>
+                    Never reuse the same password across multiple services.
+                </li>
+
+                <li>
+                    Enable multi-factor authentication whenever available.
+                </li>
+
+                <li>
+                    Avoid predictable passwords containing names or birthdays.
+                </li>
+
+                <li>
+                    Consider using a trusted password manager.
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ====================================================== -->
+    <!-- USB BAITING -->
+    <!-- ====================================================== -->
+
+    {% elif module_name == "USB Baiting" %}
+
+
+    <div class="section">
+
+        <h2>
+            💾 USB Baiting Analysis
+        </h2>
+
+
+        <div class="info-grid">
+
+
+            <div class="info-box">
+
+                <span>
+                    Module
+                </span>
+
+                <strong>
+                    USB Baiting
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    USB Scenarios
+                </span>
+
+                <strong>
+                    {{ total }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    Correct Decisions
+                </span>
+
+                <strong>
+                    {{ score }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    Incorrect Decisions
+                </span>
+
+                <strong>
+                    {{ total - score }}
+                </strong>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <h2>
+            🧠 USB Security Assessment
+        </h2>
+
+        <div class="message">
+
+            {{ feedback }}
+
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <h2>
+            🛡️ USB Baiting Protection
+        </h2>
+
+
+        <div class="advice">
+
+            <ul>
+
+                <li>
+                    Never connect an unknown USB device to your computer.
+                </li>
+
+                <li>
+                    Do not trust USB drives found in public places.
+                </li>
+
+                <li>
+                    Scan external storage devices before opening files.
+                </li>
+
+                <li>
+                    Avoid opening unknown executable files.
+                </li>
+
+                <li>
+                    Report suspicious removable media to the appropriate security team.
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ====================================================== -->
+    <!-- BAITING -->
+    <!-- ====================================================== -->
+
+    {% elif module_name == "Baiting Simulator" %}
+
+
+    <div class="section">
+
+        <h2>
+            🎁 Baiting Attack Analysis
+        </h2>
+
+
+        <div class="info-grid">
+
+
+            <div class="info-box">
+
+                <span>
+                    Module
+                </span>
+
+                <strong>
+                    Baiting Simulator
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    Scenarios
+                </span>
+
+                <strong>
+                    {{ total }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    Correct Decisions
+                </span>
+
+                <strong>
+                    {{ score }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    Incorrect Decisions
+                </span>
+
+                <strong>
+                    {{ total - score }}
+                </strong>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <h2>
+            🧠 Baiting Awareness Assessment
+        </h2>
+
+        <div class="message">
+
+            {{ feedback }}
+
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <h2>
+            🛡️ Baiting Protection
+        </h2>
+
+
+        <div class="advice">
+
+            <ul>
+
+                <li>
+                    Be cautious of free gifts, downloads and unexpected rewards.
+                </li>
+
+                <li>
+                    Do not install unknown software simply because it is offered for free.
+                </li>
+
+                <li>
+                    Verify unexpected offers through trusted sources.
+                </li>
+
+                <li>
+                    Avoid entering credentials into suspicious websites.
+                </li>
+
+                <li>
+                    Remember that attractive rewards can be used to manipulate users.
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ====================================================== -->
+    <!-- SOCIAL MEDIA -->
+    <!-- ====================================================== -->
+
+    {% elif module_name == "Social Media Privacy Analyzer" %}
+
+
+    <div class="section">
+
+        <h2>
+            👤 Social Media Privacy Analysis
+        </h2>
+
+
+        <div class="info-grid">
+
+
+            <div class="info-box">
+
+                <span>
+                    Module
+                </span>
+
+                <strong>
+                    Social Media Privacy Analyzer
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    Privacy Scenarios
+                </span>
+
+                <strong>
+                    {{ total }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    Correct Decisions
+                </span>
+
+                <strong>
+                    {{ score }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    Incorrect Decisions
+                </span>
+
+                <strong>
+                    {{ total - score }}
+                </strong>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <h2>
+            🧠 Privacy Awareness Assessment
+        </h2>
+
+        <div class="message">
+
+            {{ feedback }}
+
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <h2>
+            🛡️ Social Media Privacy Protection
+        </h2>
+
+
+        <div class="advice">
+
+            <ul>
+
+                <li>
+                    Avoid publicly sharing sensitive personal information.
+                </li>
+
+                <li>
+                    Review privacy settings regularly.
+                </li>
+
+                <li>
+                    Be careful when accepting unknown friend or follow requests.
+                </li>
+
+                <li>
+                    Avoid sharing information that could be used for password recovery or impersonation.
+                </li>
+
+                <li>
+                    Think carefully before posting your location or personal routine.
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ====================================================== -->
+    <!-- FAKE SHOPPING -->
+    <!-- ====================================================== -->
+
+    {% elif module_name == "Fake Shopping Website Attack" %}
+
+
+    <div class="section">
+
+        <h2>
+            🛒 Fake Shopping Website Analysis
+        </h2>
+
+
+        <div class="info-grid">
+
+
+            <div class="info-box">
+
+                <span>
+                    Module
+                </span>
+
+                <strong>
+                    Fake Shopping Website Attack
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    Shopping Scenarios
+                </span>
+
+                <strong>
+                    {{ total }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    Correct Decisions
+                </span>
+
+                <strong>
+                    {{ score }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    Incorrect Decisions
+                </span>
+
+                <strong>
+                    {{ total - score }}
+                </strong>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <h2>
+            🧠 Online Shopping Awareness
+        </h2>
+
+
+        <div class="message">
+
+            {{ feedback }}
+
+        </div>
+
+    </div>
+
+
+    <div class="section">
+
+        <h2>
+            🛡️ Fake Shopping Protection
+        </h2>
+
+
+        <div class="advice">
+
+            <ul>
+
+                <li>
+                    Check the website domain carefully before purchasing.
+                </li>
+
+                <li>
+                    Be suspicious of extremely large discounts.
+                </li>
+
+                <li>
+                    Verify the store through trusted sources.
+                </li>
+
+                <li>
+                    Avoid making payments through suspicious links.
+                </li>
+
+                <li>
+                    Check whether the website uses secure payment methods.
+                </li>
+
+                <li>
+                    Be cautious of fake customer-support payment requests.
+                </li>
+
+                <li>
+                    Avoid shopping websites that create extreme urgency.
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ====================================================== -->
+    <!-- SMISHING -->
+    <!-- ====================================================== -->
+
+    {% elif module_name == "Smishing Attack" %}
+
+
+    <div class="section">
+
+        <h2>
+            📱 Smishing Attack Analysis
+        </h2>
+
+
+        <div class="info-grid">
+
+
+            <div class="info-box">
+
+                <span>
+                    Module
+                </span>
+
+                <strong>
+                    Smishing Attack
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    SMS Scenarios
+                </span>
+
+                <strong>
+                    {{ total }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    Correct Decisions
+                </span>
+
+                <strong>
+                    {{ score }}
+                </strong>
+
+            </div>
+
+
+            <div class="info-box">
+
+                <span>
+                    Incorrect Decisions
+                </span>
+
+                <strong>
+                    {{ total - score }}
+                </strong>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+
+    <div class="section">
+
+        <h2>
+            🧠 Smishing Awareness Assessment
+        </h2>
+
+
+        <div class="message">
+
+            {{ feedback }}
+
+        </div>
+
+    </div>
+
+
+
+    <div class="section">
+
+        <h2>
+            🛡️ Smishing Protection
+        </h2>
+
+
+        <div class="advice">
+
+            <ul>
+
+                <li>
+                    Do not trust unexpected SMS messages that create urgency or fear.
+                </li>
+
+                <li>
+                    Never share passwords, OTPs, PINs or banking information through SMS links.
+                </li>
+
+                <li>
+                    Carefully check the sender and website address before opening a link.
+                </li>
+
+                <li>
+                    Be suspicious of messages claiming that your account will be blocked or suspended immediately.
+                </li>
+
+                <li>
+                    Verify banking, delivery and payment messages through the organization's official application or website.
+                </li>
+
+                <li>
+                    Treat unexpected lottery, prize and cashback messages with caution.
+                </li>
+
+                <li>
+                    When in doubt, do not click the link. Verify the message through an independently trusted source.
+                </li>
+
+            </ul>
+
+        </div>
+
+    </div>
+
+{% elif module_name == "Fake OTP Request" %}
+
+<div class="section">
+
+    <h2>🔐 Fake OTP Request Analysis</h2>
+
+    <div class="info-grid">
+
+        <div class="info-box">
+            <span>Module</span>
+            <strong>Fake OTP Request</strong>
+        </div>
+
+        <div class="info-box">
+            <span>Total Scenarios</span>
+            <strong>{{ total }}</strong>
+        </div>
+
+        <div class="info-box">
+            <span>Correct Decisions</span>
+            <strong>{{ score }}</strong>
+        </div>
+
+        <div class="info-box">
+            <span>Incorrect Decisions</span>
+            <strong>{{ total - score }}</strong>
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="section">
+
+    <h2>🧠 OTP Security Awareness</h2>
+
+    <div class="message">
+
+        {{ feedback }}
+
+    </div>
+
+</div>
+
+
+<div class="section">
+
+    <h2>🛡️ OTP Protection Guidelines</h2>
+
+    <div class="advice">
+
+        <ul>
+
+            <li>
+                Never tell an OTP to a caller, support representative
+                or unknown person.
+            </li>
+
+            <li>
+                Only enter an OTP into the official service
+                you intentionally opened.
+            </li>
+
+            <li>
+                Do not trust urgency, threats of account suspension,
+                refunds or prizes as reasons to disclose an OTP.
+            </li>
+
+            <li>
+                If you receive an unexpected OTP, verify your account
+                through the official application or website.
+            </li>
+
+            <li>
+                Never share OTPs, PINs, passwords or authentication codes.
+            </li>
+
+            <li>
+                If you are unsure, contact the organization through
+                a trusted official channel.
+            </li>
+
+        </ul>
+
+    </div>
+
+</div>
+{% elif module_name == "Permission Checker" %}
+
+<div class="section">
+
+    <h2>🔐 Permission Security Analysis</h2>
+
+    <div class="info-grid">
+
+        <div class="info-box">
+            <span>Module</span>
+            <strong>Permission Checker</strong>
+        </div>
+
+        <div class="info-box">
+            <span>Total Scenarios</span>
+            <strong>{{ total }}</strong>
+        </div>
+
+        <div class="info-box">
+            <span>Correct Decisions</span>
+            <strong>{{ score }}</strong>
+        </div>
+
+        <div class="info-box">
+            <span>Incorrect Decisions</span>
+            <strong>{{ total - score }}</strong>
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="section">
+
+    <h2>🧠 Permission Awareness</h2>
+
+    <div class="message">
+
+        {{ feedback }}
+
+    </div>
+
+</div>
+
+
+<div class="section">
+
+    <h2>🛡️ Permission Safety Guidelines</h2>
+
+    <div class="advice">
+
+        <ul>
+
+            <li>
+                Check whether a permission is actually required
+                for the application's main function.
+            </li>
+
+            <li>
+                Avoid automatically allowing every permission
+                requested by an application.
+            </li>
+
+            <li>
+                Be especially careful with access to contacts,
+                SMS, microphone, camera and location.
+            </li>
+
+            <li>
+                Prefer limited or temporary permissions when
+                your device provides those options.
+            </li>
+
+            <li>
+                Review application permissions regularly and
+                revoke access that is no longer necessary.
+            </li>
+
+            <li>
+                If an application requests unrelated sensitive
+                permissions, consider uninstalling it.
+            </li>
+
+        </ul>
+
+    </div>
+
+</div>
+
+{% elif module_name == "URL Inspection" %}
+
+<div class="section">
+
+    <h2>🔎 URL Inspection Analysis</h2>
+
+    <div class="info-grid">
+
+        <div class="info-box">
+            <span>Module</span>
+            <strong>URL Inspection</strong>
+        </div>
+
+        <div class="info-box">
+            <span>Score</span>
+            <strong>{{ score }} / {{ total }}</strong>
+        </div>
+
+        <div class="info-box">
+            <span>Risk Level</span>
+            <strong>{{ risk }}</strong>
+        </div>
+
+        <div class="info-box">
+            <span>Accuracy</span>
+            <strong>{{ percentage }}%</strong>
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="section">
+
+    <h2>🧠 URL Awareness Feedback</h2>
+
+    <div class="message">
+
+        {{ feedback }}
+
+    </div>
+
+</div>
+
+
+<div class="section">
+
+    <h2>🛡️ URL Safety Guidelines</h2>
+
+    <div class="advice">
+
+        <ul>
+
+            <li>
+                Always inspect the complete domain name before
+                entering sensitive information.
+            </li>
+
+            <li>
+                Look for unusual spellings, extra words and
+                misleading domains.
+            </li>
+
+            <li>
+                Do not trust a link simply because it uses HTTPS.
+            </li>
+
+            <li>
+                Be cautious with unexpected links received through
+                email, SMS or social media.
+            </li>
+
+            <li>
+                When in doubt, open the organization's official
+                website directly instead of using the provided link.
+            </li>
+
+        </ul>
+
+    </div>
+
+</div>
+{% elif module_name == "AI Deepfake Voice Scam" %}
+
+<div class="section">
+
+    <h2>🎙️ AI Deepfake Voice Analysis</h2>
+
+    <div class="info-grid">
+
+        <div class="info-box">
+            <span>Module</span>
+            <strong>AI Deepfake Voice Scam</strong>
+        </div>
+
+        <div class="info-box">
+            <span>Score</span>
+            <strong>{{ score }} / {{ total }}</strong>
+        </div>
+
+        <div class="info-box">
+            <span>Risk Level</span>
+            <strong>{{ risk }}</strong>
+        </div>
+
+        <div class="info-box">
+            <span>Accuracy</span>
+            <strong>{{ percentage }}%</strong>
+        </div>
+
+    </div>
+
+</div>
+
+
+<div class="section">
+
+    <h2>🧠 Deepfake Voice Awareness</h2>
+
+    <div class="message">
+
+        {{ feedback }}
+
+    </div>
+
+</div>
+
+
+<div class="section">
+
+    <h2>🚩 Deepfake Voice Warning Signs</h2>
+
+    <div class="advice">
+
+        <ul>
+
+            <li>
+                Do not trust a person's identity based only on
+                how familiar their voice sounds.
+            </li>
+
+            <li>
+                Be cautious when a voice message creates
+                extreme urgency or emotional pressure.
+            </li>
+
+            <li>
+                Never provide passwords, OTPs or other
+                sensitive information because of a voice request.
+            </li>
+
+            <li>
+                Independently contact the person using a
+                trusted phone number or communication channel.
+            </li>
+
+            <li>
+                Verify unusual payment requests before
+                transferring money or purchasing gift cards.
+            </li>
+
+            <li>
+                Remember that AI-generated audio can imitate
+                familiar voices convincingly.
+            </li>
+
+        </ul>
+
+    </div>
+
+</div>
+{% elif module_name == "AI Deepfake Voice Scam" %}
+
+<div class="section">
+
+    <h2>🎙️ AI Deepfake Voice Analysis</h2>
+
+    <div class="info-grid">
+
+        <div class="info-box">
+            <span>Module</span>
+            <strong>AI Deepfake Voice Scam</strong>
+        </div>
+
+        <div class="info-box">
+            <span>Score</span>
+            <strong>{{ score }} / {{ total }}</strong>
+        </div>
+
+        <div class="info-box">
+            <span>Risk Level</span>
+            <strong>{{ risk }}</strong>
+        </div>
+
+        <div class="info-box">
+            <span>Accuracy</span>
+            <strong>{{ percentage }}%</strong>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+<div class="section">
+
+    <h2>🚩 Deepfake Voice Warning Signs</h2>
+
+    <div class="advice">
+
+        <ul>
+
+            <li>
+                Do not trust a person's identity based only on
+                how familiar their voice sounds.
+            </li>
+
+            <li>
+                Be cautious when a voice message creates
+                extreme urgency or emotional pressure.
+            </li>
+
+            <li>
+                Never provide passwords, OTPs or other
+                sensitive information because of a voice request.
+            </li>
+
+            <li>
+                Independently contact the person using a
+                trusted phone number or communication channel.
+            </li>
+
+            <li>
+                Verify unusual payment requests before
+                transferring money or purchasing gift cards.
+            </li>
+
+            <li>
+                Remember that AI-generated audio can imitate
+                familiar voices convincingly.
+            </li>
+
+        </ul>
+
+    </div>
+
+</div>
+    {% endif %}
+
+
+
+    <!-- ====================================================== -->
+    <!-- BUTTONS -->
+    <!-- ====================================================== -->
+
+    <div class="buttons">
+
+
+        <!-- HOME -->
+
+       <a
+    href="/dashboard"
+    class="btn secondary"
+>
+    Back to Dashboard
+</a>
+
+
+        <!-- PHISHING -->
+
+        {% if module_name == "Phishing Attack" %}
+
+        <a
+            href="{{ url_for('phishing.start_phishing') }}"
+            class="btn"
+        >
+            Try Again
+        </a>
+
+
+
+        <!-- FAKE JOB -->
+
+        {% elif module_name == "Fake Job Offers" %}
+
+        <a
+            href="{{ url_for('fakejoboff.start_fake_job') }}"
+            class="btn"
+        >
+            Try Again
+        </a>
+
+
+
+        <!-- PASSWORD -->
+
+        {% elif module_name == "Password Attack Simulator" %}
+
+        <a href="{{ url_for('password_attack.password_attack_page') }}"
+   class="btn">
+    Try Again
+</a>
+
+
+
+        <!-- USB -->
+
+        {% elif module_name == "USB Baiting" %}
+
+        <a
+            href="{{ url_for('usb_baiting.start_usb_baiting') }}"
+            class="btn"
+        >
+            Try Again
+        </a>
+
+
+
+        <!-- BAITING -->
+
+        {% elif module_name == "Baiting Simulator" %}
+
+        <a
+            href="{{ url_for('baiting.start_baiting') }}"
+            class="btn"
+        >
+            Try Again
+        </a>
+
+
+
+        <!-- SOCIAL MEDIA -->
+
+        {% elif module_name == "Social Media Privacy Analyzer" %}
+
+        <a
+            href="{{ url_for('social_media_privacy.start_social_media_privacy') }}"
+            class="btn"
+        >
+            Try Again
+        </a>
+
+
+
+        <!-- FAKE SHOPPING -->
+
+        {% elif module_name == "Fake Shopping Website Attack" %}
+
+        <a
+            href="{{ url_for('fake_shopping.start_fake_shopping') }}"
+            class="btn"
+        >
+            Try Again
+        </a>
+
+
+
+        <!-- SMISHING -->
+
+        {% elif module_name == "Smishing Attack" %}
+
+        <a
+            href="{{ url_for('smishing.start_smishing') }}"
+            class="btn"
+        >
+            Try Again
+        </a>
+{% elif module_name == "Fake OTP Request" %}
+
+<a href="{{ url_for('fake_otp.start_fake_otp') }}" class="btn">
+    Try Again
+</a>
+{% elif module_name == "Permission Checker" %}
+
+<a href="{{ url_for('permission_checker.start_permission_checker') }}"
+   class="btn">
+
+    Try Again
+
+</a>
+
+{% elif module_name == "URL Inspection" %}
+
+<a href="{{ url_for('url_inspection.start_url_inspection') }}"
+   class="btn">
+    Try Again
+</a>
+{% elif module_name == "AI Deepfake Voice Scam" %}
+
+<a href="{{ url_for('deepfake_voice.start_deepfake_voice') }}"
+   class="btn">
+    Try Again
+</a>
+        {% endif %}
+
+
+
+    </div>
+
+
+
+    <!-- FOOTER -->
+
+    <div class="footer">
+
+        <p>
+            SEVT — Social Engineering Vulnerability Tester
+        </p>
+
+        <p>
+            This simulation is designed for cybersecurity awareness and educational purposes.
+        </p>
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

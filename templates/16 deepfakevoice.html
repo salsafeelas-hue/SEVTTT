@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SEVT | AI Deepfake Voice Scam</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #dffcff;
+
+            background:
+                radial-gradient(
+                    circle at top,
+                    #092536,
+                    #031019 45%,
+                    #01070c 100%
+                );
+
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+
+            background-image:
+                linear-gradient(
+                    rgba(0,255,255,0.035) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(0,255,255,0.035) 1px,
+                    transparent 1px
+                );
+
+            background-size: 45px 45px;
+
+            pointer-events: none;
+
+            z-index: -1;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 900px;
+            margin: 40px auto;
+        }
+
+        /* HEADER */
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #00ffff;
+            font-size: 34px;
+
+            text-shadow:
+                0 0 10px rgba(0,255,255,0.7),
+                0 0 25px rgba(0,255,255,0.3);
+        }
+
+        .header p {
+            margin-top: 10px;
+            color: #8fbfc7;
+            font-size: 15px;
+        }
+
+        /* PROGRESS */
+
+        .progress {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #7ddfe7;
+            font-size: 14px;
+        }
+
+        .progress-number {
+            color: #00ffff;
+            font-weight: bold;
+        }
+
+        /* MAIN CARD */
+
+        .card {
+            position: relative;
+
+            background:
+                rgba(3, 20, 30, 0.92);
+
+            border: 1px solid rgba(0,255,255,0.35);
+
+            border-radius: 18px;
+
+            padding: 32px;
+
+            box-shadow:
+                0 0 35px rgba(0,255,255,0.08),
+                inset 0 0 30px rgba(0,255,255,0.025);
+        }
+
+        .scenario-title {
+            color: #00ffff;
+            font-size: 23px;
+            margin-bottom: 15px;
+        }
+
+        /* CALLER */
+
+        .caller {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            padding: 15px;
+
+            border-radius: 12px;
+
+            background: rgba(0,255,255,0.04);
+
+            border: 1px solid rgba(0,255,255,0.15);
+
+            margin-bottom: 25px;
+        }
+
+        .avatar {
+            width: 55px;
+            height: 55px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            flex-shrink: 0;
+
+            border-radius: 50%;
+
+            background: rgba(0,255,255,0.08);
+
+            border: 1px solid #00ffff;
+
+            font-size: 25px;
+        }
+
+        .caller-info strong {
+            display: block;
+            color: #ffffff;
+            margin-bottom: 5px;
+        }
+
+        .caller-info span {
+            color: #82b8c0;
+            font-size: 13px;
+        }
+
+        /* VOICE PLAYER */
+
+        .voice-box {
+
+            margin: 25px 0;
+
+            padding: 30px 25px;
+
+            border-radius: 15px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    rgba(0,255,255,0.08),
+                    rgba(0,80,100,0.08)
+                );
+
+            border: 1px solid rgba(0,255,255,0.3);
+
+            text-align: center;
+        }
+
+        .voice-icon {
+            font-size: 45px;
+            margin-bottom: 12px;
+        }
+
+        .voice-box h3 {
+            color: #00ffff;
+            margin-bottom: 8px;
+        }
+
+        .voice-box p {
+            color: #8dbbc2;
+            font-size: 13px;
+            margin-bottom: 20px;
+        }
+
+        .audio-wrapper {
+            width: 100%;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        audio {
+            width: 100%;
+            height: 52px;
+        }
+
+        /* AUDIO STATUS */
+
+        .audio-status {
+
+            margin: 15px auto 0;
+
+            max-width: 700px;
+
+            padding: 10px 14px;
+
+            border-radius: 8px;
+
+            font-size: 13px;
+
+            color: #8fbfc7;
+
+            background: rgba(0,255,255,0.035);
+
+            border: 1px solid rgba(0,255,255,0.12);
+
+            text-align: left;
+        }
+
+        .audio-status.loading {
+            color: #ffe39a;
+            border-color: rgba(255,200,80,0.3);
+        }
+
+        .audio-status.success {
+            color: #8dffbd;
+            border-color: rgba(0,255,130,0.3);
+        }
+
+        .audio-status.error {
+            color: #ff9c9c;
+            border-color: rgba(255,70,70,0.4);
+        }
+
+        /* RETRY BUTTON */
+
+        .retry-audio {
+
+            display: none;
+
+            margin: 12px auto 0;
+
+            padding: 9px 18px;
+
+            border-radius: 8px;
+
+            border: 1px solid #00ffff;
+
+            background: rgba(0,255,255,0.06);
+
+            color: #00ffff;
+
+            cursor: pointer;
+
+            font-weight: bold;
+
+            transition: 0.2s;
+        }
+
+        .retry-audio:hover {
+
+            background: rgba(0,255,255,0.15);
+
+            box-shadow:
+                0 0 15px rgba(0,255,255,0.25);
+        }
+
+        /* AI LABEL */
+
+        .ai-label {
+
+            margin-top: 15px;
+
+            display: inline-block;
+
+            padding: 7px 13px;
+
+            border-radius: 20px;
+
+            font-size: 12px;
+
+            color: #00ffff;
+
+            border: 1px solid rgba(0,255,255,0.35);
+
+            background: rgba(0,255,255,0.06);
+        }
+
+        /* TRANSCRIPT */
+
+        .transcript {
+
+            margin-top: 25px;
+
+            padding: 20px;
+
+            border-left: 3px solid #00ffff;
+
+            background: rgba(0,255,255,0.035);
+
+            border-radius: 8px;
+        }
+
+        .transcript h3 {
+            color: #00ffff;
+            margin-bottom: 10px;
+        }
+
+        .transcript p {
+            color: #c7e9ed;
+            line-height: 1.7;
+        }
+
+        /* WARNING */
+
+        .warning {
+
+            margin-top: 25px;
+
+            padding: 15px;
+
+            border-radius: 10px;
+
+            background: rgba(255,170,0,0.06);
+
+            border: 1px solid rgba(255,170,0,0.35);
+
+            color: #ffd98a;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+        /* QUESTION */
+
+        .question {
+
+            margin-top: 30px;
+
+            text-align: center;
+        }
+
+        .question h2 {
+            font-size: 20px;
+            color: #ffffff;
+            margin-bottom: 20px;
+        }
+
+        .choices {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, 1fr);
+
+            gap: 15px;
+        }
+
+        .choice {
+
+            display: block;
+
+            padding: 18px;
+
+            border-radius: 12px;
+
+            border: 1px solid rgba(0,255,255,0.3);
+
+            background: rgba(0,255,255,0.04);
+
+            color: #dffcff;
+
+            cursor: pointer;
+
+            transition: 0.25s;
+        }
+
+        .choice:hover {
+
+            background: rgba(0,255,255,0.10);
+
+            border-color: #00ffff;
+
+            transform: translateY(-2px);
+        }
+
+        .choice input {
+            display: none;
+        }
+
+        .choice span {
+            font-weight: bold;
+        }
+
+        .choice:has(input:checked) {
+
+            background: rgba(0,255,255,0.16);
+
+            border-color: #00ffff;
+
+            box-shadow:
+                0 0 15px rgba(0,255,255,0.15);
+        }
+
+        .submit-btn {
+
+            width: 100%;
+
+            margin-top: 20px;
+
+            padding: 15px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: #00ffff;
+
+            color: #001014;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.25s;
+        }
+
+        .submit-btn:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 0 20px rgba(0,255,255,0.45);
+        }
+
+        /* FOOTER */
+
+        .footer {
+
+            text-align: center;
+
+            margin-top: 25px;
+
+            color: #608b92;
+
+            font-size: 12px;
+        }
+
+        @media(max-width: 650px) {
+
+            .container {
+                width: 95%;
+                margin: 20px auto;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .header h1 {
+                font-size: 27px;
+            }
+
+            .choices {
+                grid-template-columns: 1fr;
+            }
+
+            .caller {
+                align-items: flex-start;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <h1>
+            🎙️ AI Deepfake Voice Scam
+        </h1>
+
+        <p>
+            Identify suspicious AI-generated voice impersonation
+            and social engineering attempts.
+        </p>
+
+    </div>
+
+
+    <!-- PROGRESS -->
+
+    <div class="progress">
+
+        Scenario
+
+        <span class="progress-number">
+            {{ current }}
+        </span>
+
+        of
+
+        <span class="progress-number">
+            {{ total }}
+        </span>
+
+    </div>
+
+
+    <!-- MAIN CARD -->
+
+    <div class="card">
+
+
+        <!-- SCENARIO TITLE -->
+
+        <div class="scenario-title">
+
+            {{ scenario.scenario_title }}
+
+        </div>
+
+
+        <!-- CALLER -->
+
+        <div class="caller">
+
+            <div class="avatar">
+                🎙️
+            </div>
+
+            <div class="caller-info">
+
+                <strong>
+                    {{ scenario.caller_name }}
+                </strong>
+
+                <span>
+                    {{ scenario.caller_role }}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- AI VOICE -->
+
+        <div class="voice-box">
+
+
+            <div class="voice-icon">
+                🔊
+            </div>
+
+
+            <h3>
+                Incoming Voice Message
+            </h3>
+
+
+            <p>
+                Listen carefully and identify
+                suspicious signs in the message.
+            </p>
+
+
+            <!-- AUDIO PLAYER -->
+
+            <div class="audio-wrapper">
+
+                <audio
+                    id="voicePlayer"
+                    controls
+                    preload="auto">
+
+                    <source
+                        src="{{ url_for(
+                            'deepfake_voice.deepfake_voice_audio',
+                            scenario_id=scenario.scenario_id
+                        ) }}"
+                        type="audio/mpeg">
+
+                    Your browser does not support
+                    audio playback.
+
+                </audio>
+
+
+                <!-- STATUS -->
+
+                <div
+                    id="audioStatus"
+                    class="audio-status loading">
+
+                    ⏳ Preparing AI-generated training voice...
+
+                </div>
+
+
+                <!-- RETRY -->
+
+                <button
+                    type="button"
+                    id="retryAudio"
+                    class="retry-audio">
+
+                    🔄 Retry Voice
+
+                </button>
+
+            </div>
+
+
+            <!-- AI LABEL -->
+
+            <div class="ai-label">
+
+                🤖 AI-generated training voice
+
+            </div>
+
+
+        </div>
+
+
+        <!-- TRANSCRIPT -->
+
+        <div class="transcript">
+
+            <h3>
+                📝 Voice Transcript
+            </h3>
+
+            <p>
+                {{ scenario.message_text }}
+            </p>
+
+        </div>
+
+
+        <!-- WARNING -->
+
+        <div class="warning">
+
+            ⚠️
+            <strong>
+                Training Notice:
+            </strong>
+
+            This voice is AI-generated for
+            cybersecurity awareness training.
+            The simulation does not reproduce
+            or impersonate a real person's voice.
+
+        </div>
+
+
+        <!-- QUESTION -->
+
+        <form method="POST">
+
+
+            <div class="question">
+
+
+                <h2>
+                    What should you do?
+                </h2>
+
+
+                <div class="choices">
+
+
+                    <label class="choice">
+
+                        <input
+                            type="radio"
+                            name="answer"
+                            value="1"
+                            required>
+
+                        <span>
+                            🟢 Trust / Safe
+                        </span>
+
+                    </label>
+
+
+                    <label class="choice">
+
+                        <input
+                            type="radio"
+                            name="answer"
+                            value="2"
+                            required>
+
+                        <span>
+                            🔴 Treat as Suspicious / Scam
+                        </span>
+
+                    </label>
+
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="submit-btn">
+
+                    Submit Decision →
+
+                </button>
+
+
+            </div>
+
+
+        </form>
+
+
+    </div>
+
+
+    <!-- FOOTER -->
+
+    <div class="footer">
+
+        SEVT • Social Engineering Vulnerability Tester
+
+    </div>
+
+
+</div>
+
+
+<script>
+
+
+    /* =====================================================
+       AI VOICE PLAYER
+       ===================================================== */
+
+
+    const voicePlayer =
+        document.getElementById("voicePlayer");
+
+
+    const audioStatus =
+        document.getElementById("audioStatus");
+
+
+    const retryButton =
+        document.getElementById("retryAudio");
+
+
+    const audioSource =
+        voicePlayer.querySelector("source");
+
+
+    const originalAudioURL =
+        audioSource.src;
+
+
+    function setStatus(
+        message,
+        type
+    ) {
+
+        audioStatus.textContent =
+            message;
+
+        audioStatus.className =
+            "audio-status " + type;
+
+    }
+
+
+    /* -----------------------------------------------------
+       When browser starts loading audio
+       ----------------------------------------------------- */
+
+    voicePlayer.addEventListener(
+        "loadstart",
+        function() {
+
+            setStatus(
+                "⏳ Loading AI-generated training voice...",
+                "loading"
+            );
+
+        }
+    );
+
+
+    /* -----------------------------------------------------
+       Audio metadata loaded
+       ----------------------------------------------------- */
+
+    voicePlayer.addEventListener(
+        "loadedmetadata",
+        function() {
+
+            setStatus(
+                "✅ Voice ready. Press ▶️ to listen.",
+                "success"
+            );
+
+            retryButton.style.display =
+                "none";
+
+        }
+    );
+
+
+    /* -----------------------------------------------------
+       Audio can play
+       ----------------------------------------------------- */
+
+    voicePlayer.addEventListener(
+        "canplay",
+        function() {
+
+            setStatus(
+                "✅ Voice ready. Press ▶️ to listen.",
+                "success"
+            );
+
+        }
+    );
+
+
+    /* -----------------------------------------------------
+       Audio starts playing
+       ----------------------------------------------------- */
+
+    voicePlayer.addEventListener(
+        "play",
+        function() {
+
+            setStatus(
+                "🔊 AI-generated training voice is playing...",
+                "success"
+            );
+
+        }
+    );
+
+
+    /* -----------------------------------------------------
+       Audio finished
+       ----------------------------------------------------- */
+
+    voicePlayer.addEventListener(
+        "ended",
+        function() {
+
+            setStatus(
+                "✅ Voice message completed.",
+                "success"
+            );
+
+        }
+    );
+
+
+    /* -----------------------------------------------------
+       AUDIO ERROR
+       ----------------------------------------------------- */
+
+    voicePlayer.addEventListener(
+        "error",
+        function() {
+
+            setStatus(
+                "❌ Unable to load the AI voice. Click Retry Voice.",
+                "error"
+            );
+
+            retryButton.style.display =
+                "inline-block";
+
+        }
+    );
+
+
+    /* -----------------------------------------------------
+       RETRY
+       ----------------------------------------------------- */
+
+    retryButton.addEventListener(
+        "click",
+        function() {
+
+            setStatus(
+                "⏳ Retrying AI-generated voice...",
+                "loading"
+            );
+
+            retryButton.style.display =
+                "none";
+
+            voicePlayer.pause();
+
+            /*
+             * Add a timestamp so the browser does not
+             * use an old cached audio response.
+             */
+
+            const separator =
+                originalAudioURL.includes("?")
+                ? "&"
+                : "?";
+
+            voicePlayer.src =
+                originalAudioURL +
+                separator +
+                "retry=" +
+                Date.now();
+
+            voicePlayer.load();
+
+        }
+    );
+
+
+    /* -----------------------------------------------------
+       Initial audio loading
+       ----------------------------------------------------- */
+
+    window.addEventListener(
+        "load",
+        function() {
+
+            setStatus(
+                "⏳ Preparing AI-generated training voice...",
+                "loading"
+            );
+
+            voicePlayer.load();
+
+        }
+    );
+
+
+</script>
+
+
+</body>
+
+</html>

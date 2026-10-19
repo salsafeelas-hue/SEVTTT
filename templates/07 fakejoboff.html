@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Fake Job Offer Simulator | SEVT</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            color: #e8faff;
+
+            background:
+                radial-gradient(circle at 20% 20%, rgba(0, 255, 255, 0.08), transparent 30%),
+                radial-gradient(circle at 80% 80%, rgba(0, 140, 255, 0.08), transparent 30%),
+                #01070f;
+
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* CYBER GRID */
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+
+            background-image:
+                linear-gradient(rgba(0, 255, 255, 0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.035) 1px, transparent 1px);
+
+            background-size: 45px 45px;
+
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* TOP BAR */
+
+        .topbar {
+            height: 75px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            padding: 0 50px;
+
+            border-bottom: 1px solid rgba(0, 255, 255, 0.25);
+
+            background: rgba(1, 10, 18, 0.88);
+
+            backdrop-filter: blur(10px);
+
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo {
+            font-size: 25px;
+            font-weight: bold;
+
+            letter-spacing: 4px;
+
+            color: #00f6ff;
+
+            text-shadow:
+                0 0 8px rgba(0, 246, 255, 0.8),
+                0 0 20px rgba(0, 246, 255, 0.35);
+        }
+
+        .module-name {
+            font-size: 14px;
+
+            color: #8aa8b8;
+
+            letter-spacing: 1px;
+        }
+
+        /* MAIN */
+
+        .container {
+            width: 90%;
+            max-width: 1050px;
+
+            margin: 45px auto;
+
+            position: relative;
+            z-index: 1;
+        }
+
+        /* HEADER */
+
+        .heading {
+            text-align: center;
+
+            margin-bottom: 35px;
+        }
+
+        .heading .icon {
+            font-size: 42px;
+
+            margin-bottom: 12px;
+
+            filter: drop-shadow(0 0 10px rgba(0, 246, 255, 0.5));
+        }
+
+        .heading h1 {
+            font-size: 34px;
+
+            letter-spacing: 2px;
+
+            color: #ffffff;
+
+            margin-bottom: 10px;
+        }
+
+        .heading p {
+            color: #8ba9b8;
+
+            font-size: 15px;
+
+            line-height: 1.6;
+        }
+
+        /* PROGRESS */
+
+        .progress-area {
+            margin-bottom: 25px;
+        }
+
+        .progress-info {
+            display: flex;
+
+            justify-content: space-between;
+
+            margin-bottom: 9px;
+
+            color: #8ca8b8;
+
+            font-size: 13px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 7px;
+
+            background: rgba(255, 255, 255, 0.08);
+
+            border-radius: 20px;
+
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+
+            width: 33.33%;
+
+            background: linear-gradient(
+                90deg,
+                #00eaff,
+                #008cff
+            );
+
+            box-shadow: 0 0 12px rgba(0, 234, 255, 0.65);
+
+            transition: width 0.3s ease;
+        }
+
+        /* SCENARIO CARD */
+
+        .scenario-card {
+            background:
+                linear-gradient(
+                    145deg,
+                    rgba(7, 23, 36, 0.96),
+                    rgba(2, 12, 20, 0.96)
+                );
+
+            border: 1px solid rgba(0, 234, 255, 0.25);
+
+            border-radius: 16px;
+
+            padding: 35px;
+
+            box-shadow:
+                0 0 25px rgba(0, 180, 255, 0.08),
+                inset 0 0 25px rgba(0, 255, 255, 0.025);
+        }
+
+        /* COMPANY */
+
+        .company-section {
+            display: flex;
+
+            align-items: center;
+
+            gap: 18px;
+
+            padding-bottom: 25px;
+
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+            margin-bottom: 25px;
+        }
+
+        .company-icon {
+            width: 65px;
+            height: 65px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 14px;
+
+            background: rgba(0, 234, 255, 0.08);
+
+            border: 1px solid rgba(0, 234, 255, 0.25);
+
+            font-size: 30px;
+
+            box-shadow:
+                0 0 15px rgba(0, 234, 255, 0.08);
+        }
+
+        .company-info h2 {
+            color: #ffffff;
+
+            font-size: 22px;
+
+            margin-bottom: 5px;
+        }
+
+        .company-info span {
+            color: #00eaff;
+
+            font-size: 13px;
+
+            letter-spacing: 1px;
+        }
+
+        /* JOB TITLE */
+
+        .job-title {
+            color: #00f6ff;
+
+            font-size: 25px;
+
+            margin-bottom: 18px;
+
+            letter-spacing: 0.5px;
+        }
+
+        /* MESSAGE */
+
+        .message-box {
+            background: rgba(0, 0, 0, 0.25);
+
+            border: 1px solid rgba(255, 255, 255, 0.08);
+
+            border-radius: 10px;
+
+            padding: 24px;
+
+            margin-bottom: 28px;
+
+            color: #c7d8df;
+
+            line-height: 1.8;
+
+            font-size: 15px;
+
+            white-space: pre-line;
+        }
+
+        .message-label {
+            color: #738f9d;
+
+            font-size: 11px;
+
+            letter-spacing: 2px;
+
+            margin-bottom: 12px;
+
+            text-transform: uppercase;
+        }
+
+        /* QUESTION */
+
+        .question {
+            text-align: center;
+
+            margin: 28px 0 22px;
+        }
+
+        .question h3 {
+            color: #ffffff;
+
+            font-size: 19px;
+
+            margin-bottom: 7px;
+        }
+
+        .question p {
+            color: #7e9ba8;
+
+            font-size: 13px;
+        }
+
+        /* OPTIONS */
+
+        .options {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 18px;
+        }
+
+        .option {
+            position: relative;
+        }
+
+        .option input {
+            display: none;
+        }
+
+        .option label {
+            display: block;
+
+            padding: 20px;
+
+            border-radius: 12px;
+
+            border: 1px solid rgba(255, 255, 255, 0.12);
+
+            background: rgba(255, 255, 255, 0.025);
+
+            cursor: pointer;
+
+            text-align: center;
+
+            transition: all 0.25s ease;
+        }
+
+        .option label:hover {
+            border-color: rgba(0, 234, 255, 0.55);
+
+            background: rgba(0, 234, 255, 0.06);
+
+            transform: translateY(-2px);
+
+            box-shadow: 0 0 18px rgba(0, 234, 255, 0.08);
+        }
+
+        .option input:checked + label {
+            border-color: #00eaff;
+
+            background: rgba(0, 234, 255, 0.09);
+
+            box-shadow:
+                0 0 20px rgba(0, 234, 255, 0.15);
+        }
+
+        .option-icon {
+            font-size: 27px;
+
+            display: block;
+
+            margin-bottom: 8px;
+        }
+
+        .option-title {
+            color: #ffffff;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            margin-bottom: 5px;
+        }
+
+        .option-description {
+            color: #7f9aa6;
+
+            font-size: 12px;
+        }
+
+        /* SUBMIT */
+
+        .submit-area {
+            text-align: center;
+
+            margin-top: 28px;
+        }
+
+        .submit-btn {
+            border: none;
+
+            padding: 14px 40px;
+
+            border-radius: 9px;
+
+            background: linear-gradient(
+                90deg,
+                #00d9ff,
+                #007cff
+            );
+
+            color: #001018;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+            letter-spacing: 1px;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 0 18px rgba(0, 217, 255, 0.25);
+
+            transition: all 0.25s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 0 28px rgba(0, 217, 255, 0.4);
+        }
+
+        /* WARNING */
+
+        .awareness {
+            margin-top: 25px;
+
+            padding: 16px 20px;
+
+            border-left: 3px solid #00eaff;
+
+            background: rgba(0, 234, 255, 0.035);
+
+            color: #7895a2;
+
+            font-size: 12px;
+
+            line-height: 1.6;
+        }
+
+        .awareness strong {
+            color: #00eaff;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 700px) {
+
+            .topbar {
+                padding: 0 20px;
+            }
+
+            .module-name {
+                display: none;
+            }
+
+            .container {
+                width: 94%;
+                margin: 30px auto;
+            }
+
+            .scenario-card {
+                padding: 22px;
+            }
+
+            .heading h1 {
+                font-size: 27px;
+            }
+
+            .options {
+                grid-template-columns: 1fr;
+            }
+
+            .company-section {
+                align-items: flex-start;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- TOP BAR -->
+
+    <div class="topbar">
+
+        <div class="logo">
+            SEVT
+        </div>
+
+        <div class="module-name">
+            SOCIAL ENGINEERING VULNERABILITY TESTER
+        </div>
+
+    </div>
+
+
+    <!-- MAIN CONTENT -->
+
+    <div class="container">
+
+        <!-- HEADING -->
+
+        <div class="heading">
+
+            <div class="icon">
+                💼
+            </div>
+
+            <h1>Fake Job Offer Simulator</h1>
+
+            <p>
+                Analyze the job offer carefully before deciding whether it is
+                legitimate or a scam.
+            </p>
+
+        </div>
+
+
+        <!-- PROGRESS -->
+
+        <div class="progress-area">
+
+            <div class="progress-info">
+
+                <span>
+                    Scenario {{ question_number }} of {{ total_questions }}
+                </span>
+
+                <span>
+                    Vulnerability Test
+                </span>
+
+            </div>
+
+            <div class="progress-bar">
+
+                <div
+                    class="progress-fill"
+                    style="width: {{ (question_number / total_questions) * 100 }}%;">
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- SCENARIO -->
+
+        <div class="scenario-card">
+
+            <!-- COMPANY -->
+
+            <div class="company-section">
+
+                <div class="company-icon">
+                    🏢
+                </div>
+
+                <div class="company-info">
+
+                    <h2>
+                        {{ scenario.company_name }}
+                    </h2>
+
+                    <span>
+                        RECRUITMENT MESSAGE
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <!-- JOB -->
+
+            <div class="job-title">
+                {{ scenario.job_title }}
+            </div>
+
+
+            <!-- MESSAGE -->
+
+            <div class="message-box">
+
+                <div class="message-label">
+                    Job Offer / Recruitment Message
+                </div>
+
+                {{ scenario.message }}
+
+            </div>
+
+
+            <!-- QUESTION -->
+
+            <div class="question">
+
+                <h3>
+                    What do you think about this offer?
+                </h3>
+
+                <p>
+                    Select the option you believe is correct.
+                </p>
+
+            </div>
+
+
+            <!-- OPTIONS -->
+
+            <form method="POST">
+
+                <div class="options">
+
+                    <!-- SCAM -->
+
+                    <div class="option">
+
+                        <input
+                            type="radio"
+                            id="scam"
+                            name="answer"
+                            value="scam"
+                            required
+                        >
+
+                        <label for="scam">
+
+                            <span class="option-icon">
+                                ⚠️
+                            </span>
+
+                            <div class="option-title">
+                                It's a Scam
+                            </div>
+
+                            <div class="option-description">
+                                This offer contains suspicious signs.
+                            </div>
+
+                        </label>
+
+                    </div>
+
+
+                    <!-- SAFE -->
+
+                    <div class="option">
+
+                        <input
+                            type="radio"
+                            id="safe"
+                            name="answer"
+                            value="safe"
+                            required
+                        >
+
+                        <label for="safe">
+
+                            <span class="option-icon">
+                                🛡️
+                            </span>
+
+                            <div class="option-title">
+                                It's Legitimate
+                            </div>
+
+                            <div class="option-description">
+                                This appears to be a genuine opportunity.
+                            </div>
+
+                        </label>
+
+                    </div>
+
+                </div>
+
+
+                <!-- SUBMIT -->
+
+                <div class="submit-area">
+
+                    <button
+                        type="submit"
+                        class="submit-btn"
+                    >
+                        SUBMIT ANSWER →
+                    </button>
+
+                </div>
+
+            </form>
+
+
+            <!-- AWARENESS -->
+
+            <div class="awareness">
+
+                <strong>SECURITY TIP:</strong>
+
+                Never trust a job offer only because it uses the name or logo
+                of a famous company. Verify the recruiter, email address,
+                application process and official company careers page before
+                sharing personal information or paying any fees.
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

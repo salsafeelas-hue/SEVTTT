@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>URL Inspection | SEVT</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            background:
+                radial-gradient(circle at top, #071b2c 0%, #020911 45%, #010509 100%);
+            color: #e8faff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 25px;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0, 220, 255, 0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 220, 255, 0.035) 1px, transparent 1px);
+            background-size: 45px 45px;
+            pointer-events: none;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* HEADER */
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header .icon {
+            font-size: 45px;
+            margin-bottom: 10px;
+        }
+
+        .header h1 {
+            color: #00eaff;
+            font-size: 30px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px rgba(0, 234, 255, 0.5);
+        }
+
+        .header p {
+            color: #8baeba;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        /* PROGRESS */
+
+        .progress-box {
+            background: rgba(4, 18, 29, 0.9);
+            border: 1px solid rgba(0, 234, 255, 0.25);
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            color: #8faeba;
+            font-size: 13px;
+            margin-bottom: 9px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 7px;
+            background: #0b202d;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: {{ (question_number / total_questions) * 100 }}%;
+            background: #00eaff;
+            box-shadow: 0 0 12px rgba(0, 234, 255, 0.7);
+        }
+
+        /* MAIN CARD */
+
+        .card {
+            background: rgba(5, 19, 30, 0.96);
+            border: 1px solid rgba(0, 234, 255, 0.3);
+            border-radius: 18px;
+            padding: 30px;
+            box-shadow: 0 0 35px rgba(0, 170, 255, 0.08);
+        }
+
+        .scenario-title {
+            color: #ffffff;
+            font-size: 23px;
+            margin-bottom: 22px;
+        }
+
+        /* URL BAR */
+
+        .browser {
+            background: #02070b;
+            border: 1px solid #183442;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 25px;
+        }
+
+        .browser-top {
+            height: 42px;
+            background: #0a1821;
+            display: flex;
+            align-items: center;
+            padding: 0 15px;
+            gap: 7px;
+        }
+
+        .dot {
+            width: 9px;
+            height: 9px;
+            border-radius: 50%;
+            background: #52626b;
+        }
+
+        .address {
+            margin-left: 10px;
+            flex: 1;
+            background: #02070b;
+            border: 1px solid #1a3541;
+            border-radius: 7px;
+            padding: 9px 12px;
+            color: #b8d5df;
+            font-size: 13px;
+            word-break: break-all;
+        }
+
+        .url {
+            color: #00eaff;
+        }
+
+        /* DOMAIN */
+
+        .domain-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 22px;
+        }
+
+        .info {
+            background: #07151e;
+            border: 1px solid #17303c;
+            border-radius: 10px;
+            padding: 15px;
+        }
+
+        .info span {
+            display: block;
+            font-size: 11px;
+            color: #6f8993;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 7px;
+        }
+
+        .info strong {
+            color: #ccebf2;
+            font-size: 14px;
+            word-break: break-word;
+        }
+
+        /* SCENARIO */
+
+        .scenario {
+            background: #06131b;
+            border-left: 3px solid #00eaff;
+            border-radius: 8px;
+            padding: 18px;
+            color: #b5cbd2;
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+
+        /* QUESTION */
+
+        .question {
+            color: #ffffff;
+            font-size: 17px;
+            margin-bottom: 15px;
+        }
+
+        /* OPTIONS */
+
+        .option {
+            display: block;
+            margin-bottom: 12px;
+            cursor: pointer;
+        }
+
+        .option input {
+            display: none;
+        }
+
+        .option-content {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: #07151e;
+            border: 1px solid #1b3440;
+            border-radius: 10px;
+            padding: 16px;
+            transition: 0.2s;
+        }
+
+        .option-content:hover {
+            border-color: #00eaff;
+            background: #0a202b;
+            transform: translateY(-1px);
+        }
+
+        .number {
+            min-width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #0b2733;
+            color: #00eaff;
+            font-weight: bold;
+        }
+
+        .option-text {
+            color: #bcd3da;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .option input:checked + .option-content {
+            border-color: #00eaff;
+            background: #0a2732;
+            box-shadow: 0 0 15px rgba(0, 234, 255, 0.12);
+        }
+
+        /* WARNING */
+
+        .warning {
+            margin-top: 22px;
+            padding: 15px;
+            border: 1px solid rgba(255, 193, 7, 0.3);
+            background: rgba(255, 193, 7, 0.05);
+            border-radius: 10px;
+            color: #c9c2a5;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .warning strong {
+            color: #ffd65a;
+        }
+
+        /* BUTTON */
+
+        .submit-area {
+            margin-top: 25px;
+            text-align: right;
+        }
+
+        .submit-btn {
+            border: none;
+            padding: 13px 28px;
+            border-radius: 9px;
+            background: #00eaff;
+            color: #001015;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 18px rgba(0, 234, 255, 0.5);
+        }
+
+        /* FOOTER */
+
+        .footer {
+            text-align: center;
+            color: #506872;
+            font-size: 11px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 650px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .card {
+                padding: 20px;
+            }
+
+            .domain-box {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div class="icon">🔎</div>
+
+        <h1>URL INSPECTION</h1>
+
+        <p>
+            Inspect the URL carefully before trusting the website.
+        </p>
+
+    </div>
+
+
+    <!-- PROGRESS -->
+
+    <div class="progress-box">
+
+        <div class="progress-text">
+
+            <span>
+                URL Inspection Challenge
+            </span>
+
+            <span>
+                Question {{ question_number }} / {{ total_questions }}
+            </span>
+
+        </div>
+
+        <div class="progress-bar">
+
+            <div class="progress-fill"></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- MAIN CARD -->
+
+    <div class="card">
+
+        <div class="scenario-title">
+            {{ scenario.scenario_title }}
+        </div>
+
+
+        <!-- BROWSER -->
+
+        <div class="browser">
+
+            <div class="browser-top">
+
+                <div class="dot"></div>
+                <div class="dot"></div>
+                <div class="dot"></div>
+
+                <div class="address">
+
+                    🔒
+                    <span class="url">
+                        {{ scenario.displayed_url }}
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- URL INFORMATION -->
+
+        <div class="domain-box">
+
+            <div class="info">
+
+                <span>Domain</span>
+
+                <strong>
+                    {{ scenario.domain_name }}
+                </strong>
+
+            </div>
+
+            <div class="info">
+
+                <span>URL Classification</span>
+
+                <strong>
+                    {{ scenario.url_type }}
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        <!-- SCENARIO -->
+
+        <div class="scenario">
+
+            {{ scenario.scenario_text }}
+
+        </div>
+
+
+        <!-- QUESTION -->
+
+        <div class="question">
+
+            What should you do after inspecting this URL?
+
+        </div>
+
+
+        <!-- OPTIONS -->
+
+        <form method="POST">
+
+            <label class="option">
+
+                <input
+                    type="radio"
+                    name="answer"
+                    value="1"
+                    required
+                >
+
+                <div class="option-content">
+
+                    <div class="number">1</div>
+
+                    <div class="option-text">
+                        {{ scenario.indicator_1 }}
+                    </div>
+
+                </div>
+
+            </label>
+
+
+            <label class="option">
+
+                <input
+                    type="radio"
+                    name="answer"
+                    value="2"
+                >
+
+                <div class="option-content">
+
+                    <div class="number">2</div>
+
+                    <div class="option-text">
+                        {{ scenario.indicator_2 }}
+                    </div>
+
+                </div>
+
+            </label>
+
+
+            <label class="option">
+
+                <input
+                    type="radio"
+                    name="answer"
+                    value="3"
+                >
+
+                <div class="option-content">
+
+                    <div class="number">3</div>
+
+                    <div class="option-text">
+                        {{ scenario.indicator_3 }}
+                    </div>
+
+                </div>
+
+            </label>
+
+
+            <label class="option">
+
+                <input
+                    type="radio"
+                    name="answer"
+                    value="4"
+                >
+
+                <div class="option-content">
+
+                    <div class="number">4</div>
+
+                    <div class="option-text">
+                        {{ scenario.indicator_4 }}
+                    </div>
+
+                </div>
+
+            </label>
+
+
+            <!-- WARNING -->
+
+            <div class="warning">
+
+                <strong>⚠ Security Reminder:</strong>
+
+                Never trust a URL simply because it contains
+                <b>HTTPS</b>. Always inspect the complete domain,
+                spelling and context before entering passwords,
+                OTPs or other sensitive information.
+
+            </div>
+
+
+            <!-- SUBMIT -->
+
+            <div class="submit-area">
+
+                <button
+                    type="submit"
+                    class="submit-btn"
+                >
+                    Inspect & Continue →
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <div class="footer">
+
+        SEVT • Social Engineering Vulnerability Tester
+        <br>
+        Educational Security Awareness Simulation
+
+    </div>
+
+</div>
+
+</body>
+</html>

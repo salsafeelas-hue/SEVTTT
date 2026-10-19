@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SEVT | Baiting Simulator</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "Segoe UI", Arial, sans-serif;
+        }
+
+        body {
+
+            min-height: 100vh;
+
+            color: white;
+
+            background:
+                radial-gradient(
+                    circle at top left,
+                    #071b2b 0%,
+                    transparent 40%
+                ),
+                radial-gradient(
+                    circle at bottom right,
+                    #002b3b 0%,
+                    transparent 45%
+                ),
+                #01070f;
+
+            overflow-x: hidden;
+        }
+
+
+        /* CYBER GRID */
+
+        body::before {
+
+            content: "";
+
+            position: fixed;
+
+            inset: 0;
+
+            background-image:
+                linear-gradient(
+                    rgba(0,255,255,0.035) 1px,
+                    transparent 1px
+                ),
+                linear-gradient(
+                    90deg,
+                    rgba(0,255,255,0.035) 1px,
+                    transparent 1px
+                );
+
+            background-size: 40px 40px;
+
+            pointer-events: none;
+
+            z-index: 0;
+        }
+
+
+        /* MAIN CONTAINER */
+
+        .container {
+
+            width: 90%;
+
+            max-width: 950px;
+
+            margin: 50px auto;
+
+            position: relative;
+
+            z-index: 1;
+        }
+
+
+        /* HEADER */
+
+        .header {
+
+            text-align: center;
+
+            margin-bottom: 35px;
+        }
+
+        .header h1 {
+
+            font-size: 42px;
+
+            color: #00f6ff;
+
+            letter-spacing: 3px;
+
+            text-shadow:
+                0 0 15px rgba(0,246,255,0.7);
+        }
+
+        .header p {
+
+            margin-top: 10px;
+
+            color: #8caab5;
+
+            font-size: 16px;
+        }
+
+
+        /* PROGRESS */
+
+        .progress-container {
+
+            margin-bottom: 25px;
+
+            text-align: center;
+        }
+
+        .progress-text {
+
+            color: #8caab5;
+
+            margin-bottom: 10px;
+
+            font-size: 15px;
+        }
+
+        .progress-bar {
+
+            width: 100%;
+
+            height: 8px;
+
+            background: #102431;
+
+            border-radius: 20px;
+
+            overflow: hidden;
+
+            border: 1px solid rgba(0,246,255,0.2);
+        }
+
+        .progress-fill {
+
+            height: 100%;
+
+            width:
+                {{ ((question_number - 1) / total_questions * 100) }}%;
+
+            background: #00f6ff;
+
+            box-shadow:
+                0 0 12px #00f6ff;
+
+            transition: width 0.4s ease;
+        }
+
+
+        /* MAIN CARD */
+
+        .scenario-card {
+
+            background: rgba(3,18,30,0.95);
+
+            border: 1px solid rgba(0,246,255,0.35);
+
+            border-radius: 18px;
+
+            padding: 35px;
+
+            box-shadow:
+                0 0 30px rgba(0,246,255,0.08),
+                inset 0 0 25px rgba(0,246,255,0.02);
+        }
+
+
+        /* SCENARIO LABEL */
+
+        .scenario-label {
+
+            display: inline-block;
+
+            padding: 7px 15px;
+
+            border-radius: 20px;
+
+            border: 1px solid #00f6ff;
+
+            color: #00f6ff;
+
+            font-size: 13px;
+
+            font-weight: bold;
+
+            letter-spacing: 1px;
+
+            margin-bottom: 20px;
+        }
+
+
+        /* TITLE */
+
+        .scenario-title {
+
+            font-size: 28px;
+
+            color: #e9ffff;
+
+            margin-bottom: 20px;
+
+            text-shadow:
+                0 0 8px rgba(0,246,255,0.2);
+        }
+
+
+        /* SCENARIO TEXT */
+
+        .scenario-text {
+
+            padding: 25px;
+
+            border-radius: 12px;
+
+            background: rgba(0,246,255,0.035);
+
+            border-left: 3px solid #00f6ff;
+
+            color: #c6e4e8;
+
+            font-size: 17px;
+
+            line-height: 1.8;
+
+            margin-bottom: 30px;
+        }
+
+
+        /* QUESTION */
+
+        .question {
+
+            text-align: center;
+
+            color: #00f6ff;
+
+            font-size: 21px;
+
+            margin-bottom: 22px;
+        }
+
+
+        /* ANSWER OPTIONS */
+
+        .options {
+
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 20px;
+
+        }
+
+
+        .option {
+
+            position: relative;
+        }
+
+
+        .option input {
+
+            display: none;
+        }
+
+
+        .option label {
+
+            display: block;
+
+            cursor: pointer;
+
+            padding: 22px;
+
+            border-radius: 12px;
+
+            text-align: center;
+
+            font-size: 18px;
+
+            font-weight: bold;
+
+            color: #dffcff;
+
+            background: rgba(0,246,255,0.03);
+
+            border: 1px solid rgba(0,246,255,0.25);
+
+            transition: 0.3s;
+        }
+
+
+        .option label:hover {
+
+            border-color: #00f6ff;
+
+            box-shadow:
+                0 0 18px rgba(0,246,255,0.2);
+
+            transform: translateY(-3px);
+        }
+
+
+        .option input:checked + label {
+
+            background: rgba(0,246,255,0.12);
+
+            border-color: #00f6ff;
+
+            color: #00f6ff;
+
+            box-shadow:
+                0 0 20px rgba(0,246,255,0.25);
+        }
+
+
+        .option-icon {
+
+            display: block;
+
+            font-size: 32px;
+
+            margin-bottom: 8px;
+        }
+
+
+        /* SUBMIT BUTTON */
+
+        .submit-container {
+
+            text-align: center;
+
+            margin-top: 30px;
+        }
+
+
+        .submit-btn {
+
+            padding: 15px 40px;
+
+            border: none;
+
+            border-radius: 30px;
+
+            background: #00f6ff;
+
+            color: #001018;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            letter-spacing: 1px;
+
+            transition: 0.3s;
+        }
+
+
+        .submit-btn:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 0 25px rgba(0,246,255,0.65);
+        }
+
+
+        /* PREVIOUS ANSWER FEEDBACK */
+
+        .feedback {
+
+            margin-bottom: 25px;
+
+            padding: 20px;
+
+            border-radius: 12px;
+
+            background: rgba(0,246,255,0.05);
+
+            border: 1px solid rgba(0,246,255,0.25);
+
+            color: #dffcff;
+
+            line-height: 1.7;
+        }
+
+
+        .feedback-title {
+
+            color: #00f6ff;
+
+            font-weight: bold;
+
+            margin-bottom: 8px;
+        }
+
+
+        /* WARNING */
+
+        .warning {
+
+            margin-top: 25px;
+
+            text-align: center;
+
+            color: #718c96;
+
+            font-size: 13px;
+
+            line-height: 1.6;
+        }
+
+
+        /* MOBILE */
+
+        @media (max-width: 650px) {
+
+            .container {
+
+                width: 94%;
+
+                margin: 25px auto;
+            }
+
+            .scenario-card {
+
+                padding: 22px;
+            }
+
+            .header h1 {
+
+                font-size: 30px;
+            }
+
+            .scenario-title {
+
+                font-size: 23px;
+            }
+
+            .options {
+
+                grid-template-columns: 1fr;
+            }
+
+            .scenario-text {
+
+                font-size: 15px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <h1>
+            BAITING SIMULATOR
+        </h1>
+
+        <p>
+            Social Engineering Vulnerability Tester
+        </p>
+
+    </div>
+
+
+    <!-- PROGRESS -->
+
+    <div class="progress-container">
+
+        <div class="progress-text">
+
+            Scenario
+            {{ question_number }}
+            of
+            {{ total_questions }}
+
+        </div>
+
+
+        <div class="progress-bar">
+
+            <div class="progress-fill"></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- SCENARIO CARD -->
+
+    <div class="scenario-card">
+
+
+        <!-- PREVIOUS ANSWER FEEDBACK -->
+
+        {% if feedback %}
+
+        <div class="feedback">
+
+            <div class="feedback-title">
+
+                {% if feedback.is_correct %}
+
+                    ✓ Correct Answer
+
+                {% else %}
+
+                    ✕ Incorrect Answer
+
+                {% endif %}
+
+            </div>
+
+
+            <div>
+
+                Correct classification:
+
+                <strong>
+                    {{ feedback.correct_answer|upper }}
+                </strong>
+
+            </div>
+
+
+            <div style="margin-top:8px;">
+
+                {{ feedback.explanation }}
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+        <!-- SCENARIO LABEL -->
+
+        <div class="scenario-label">
+
+            BAITING SCENARIO
+
+        </div>
+
+
+        <!-- SCENARIO TITLE -->
+
+        <h2 class="scenario-title">
+
+            {{ scenario.title }}
+
+        </h2>
+
+
+        <!-- SCENARIO DESCRIPTION -->
+
+        <div class="scenario-text">
+
+            {{ scenario.scenario_text }}
+
+        </div>
+
+
+        <!-- QUESTION -->
+
+        <div class="question">
+
+            What would you classify this situation as?
+
+        </div>
+
+
+        <!-- ANSWER FORM -->
+
+        <form
+            method="POST"
+            action="{{ url_for('baiting.baiting_page') }}"
+        >
+
+
+            <div class="options">
+
+
+                <!-- SAFE -->
+
+                <div class="option">
+
+                    <input
+                        type="radio"
+                        name="answer"
+                        id="safe"
+                        value="safe"
+                        required
+                    >
+
+                    <label for="safe">
+
+                        <span class="option-icon">
+                            🛡️
+                        </span>
+
+                        SAFE
+
+                    </label>
+
+                </div>
+
+
+                <!-- SCAM -->
+
+                <div class="option">
+
+                    <input
+                        type="radio"
+                        name="answer"
+                        id="scam"
+                        value="scam"
+                        required
+                    >
+
+                    <label for="scam">
+
+                        <span class="option-icon">
+                            ⚠️
+                        </span>
+
+                        SCAM / BAIT
+
+                    </label>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- SUBMIT -->
+
+            <div class="submit-container">
+
+                <button
+                    type="submit"
+                    class="submit-btn"
+                >
+                    SUBMIT ANSWER
+                </button>
+
+            </div>
+
+
+        </form>
+
+
+        <div class="warning">
+
+            This is a controlled cybersecurity awareness
+            simulation. No real accounts, devices or
+            credentials are involved.
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

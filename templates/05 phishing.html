@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SEVT | Email Security Training</title>
+
+<style>
+
+/* =========================================================
+   RESET
+========================================================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #eef1f5;
+    color: #202124;
+    min-height: 100vh;
+}
+
+
+/* =========================================================
+   TOP SECURITY BAR
+========================================================= */
+
+.top-bar {
+    height: 58px;
+    background: #17212b;
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 35px;
+
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-logo {
+    width: 36px;
+    height: 36px;
+
+    border-radius: 8px;
+
+    background: #19a974;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: bold;
+    color: white;
+}
+
+.brand-name {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.training-label {
+    font-size: 13px;
+    color: #c9d2da;
+}
+
+
+/* =========================================================
+   MAIN PAGE
+========================================================= */
+
+.page {
+    width: 100%;
+    max-width: 1180px;
+
+    margin: 30px auto;
+
+    padding: 0 20px;
+}
+
+
+/* =========================================================
+   TRAINING HEADER
+========================================================= */
+
+.training-header {
+
+    background: white;
+
+    border: 1px solid #dfe3e8;
+
+    border-radius: 10px;
+
+    padding: 20px 25px;
+
+    margin-bottom: 18px;
+
+    box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+}
+
+.training-top {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 15px;
+}
+
+.training-title {
+
+    font-size: 18px;
+
+    font-weight: 600;
+
+    color: #263238;
+}
+
+.scenario-count {
+
+    font-size: 14px;
+
+    color: #66727d;
+}
+
+
+/* =========================================================
+   PROGRESS
+========================================================= */
+
+.progress-container {
+
+    width: 100%;
+
+    height: 7px;
+
+    background: #e4e8ec;
+
+    border-radius: 20px;
+
+    overflow: hidden;
+}
+
+.progress {
+
+    height: 100%;
+
+    width: {{ (question_number / total_questions) * 100 }}%;
+
+    background: #19a974;
+
+    border-radius: 20px;
+
+    transition: width 0.4s ease;
+}
+
+
+/* =========================================================
+   EMAIL WINDOW
+========================================================= */
+
+.email-window {
+
+    background: white;
+
+    border: 1px solid #d7dce1;
+
+    border-radius: 10px;
+
+    overflow: hidden;
+
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+
+/* =========================================================
+   EMAIL TOP HEADER
+========================================================= */
+
+.email-toolbar {
+
+    height: 55px;
+
+    background: #f7f8fa;
+
+    border-bottom: 1px solid #e1e5e9;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    padding: 0 22px;
+}
+
+.mail-title {
+
+    font-size: 14px;
+
+    color: #5f6368;
+
+    font-weight: 600;
+}
+
+.toolbar-icons {
+
+    display: flex;
+
+    gap: 20px;
+
+    color: #6d7780;
+
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   EMAIL CONTENT
+========================================================= */
+
+.email-content {
+
+    padding: 28px 38px 35px;
+}
+
+
+/* =========================================================
+   SENDER INFORMATION
+========================================================= */
+
+.sender-row {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 15px;
+
+    padding-bottom: 22px;
+}
+
+.sender-avatar {
+
+    width: 48px;
+    height: 48px;
+
+    border-radius: 50%;
+
+    background: #536dfe;
+
+    color: white;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    font-size: 20px;
+
+    font-weight: bold;
+
+    flex-shrink: 0;
+}
+
+.sender-details {
+
+    flex: 1;
+}
+
+.sender-name {
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    color: #202124;
+
+    margin-bottom: 4px;
+}
+
+.sender-email {
+
+    font-size: 13px;
+
+    color: #69747d;
+}
+
+.email-meta {
+
+    text-align: right;
+
+    font-size: 12px;
+
+    color: #7b858d;
+}
+
+
+/* =========================================================
+   SUBJECT
+========================================================= */
+
+.subject-area {
+
+    border-top: 1px solid #eceff1;
+
+    border-bottom: 1px solid #eceff1;
+
+    padding: 17px 0;
+
+    margin-bottom: 25px;
+}
+
+.subject-label {
+
+    font-size: 11px;
+
+    text-transform: uppercase;
+
+    letter-spacing: 0.7px;
+
+    color: #8a949d;
+
+    margin-bottom: 5px;
+}
+
+.subject-text {
+
+    font-size: 21px;
+
+    font-weight: 500;
+
+    color: #202124;
+
+    line-height: 1.4;
+}
+
+
+/* =========================================================
+   EMAIL BODY
+========================================================= */
+
+.email-body {
+
+    max-width: 900px;
+
+    font-size: 15px;
+
+    line-height: 1.85;
+
+    color: #30363b;
+
+    white-space: pre-line;
+}
+
+
+/* =========================================================
+   URL / LINK
+========================================================= */
+
+.link-section {
+
+    margin-top: 25px;
+
+    padding: 15px 17px;
+
+    background: #f7f9fa;
+
+    border: 1px solid #dfe4e8;
+
+    border-radius: 7px;
+}
+
+.link-label {
+
+    font-size: 12px;
+
+    color: #69747d;
+
+    margin-bottom: 7px;
+
+    font-weight: 600;
+}
+
+.link-preview {
+
+    font-size: 14px;
+
+    color: #1769aa;
+
+    word-break: break-all;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   EMAIL ACTIONS
+========================================================= */
+
+.email-actions {
+
+    display: flex;
+
+    gap: 10px;
+
+    margin-top: 28px;
+
+    padding-top: 20px;
+
+    border-top: 1px solid #eceff1;
+}
+
+.email-action {
+
+    padding: 8px 16px;
+
+    border: 1px solid #d6dce1;
+
+    border-radius: 6px;
+
+    background: white;
+
+    color: #56616b;
+
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   DECISION AREA
+========================================================= */
+
+.decision-area {
+
+    margin-top: 25px;
+
+    background: #f8fafb;
+
+    border: 1px solid #dfe5e9;
+
+    border-radius: 10px;
+
+    padding: 25px;
+}
+
+.decision-header {
+
+    margin-bottom: 20px;
+}
+
+.decision-title {
+
+    font-size: 18px;
+
+    font-weight: 600;
+
+    color: #263238;
+
+    margin-bottom: 6px;
+}
+
+.decision-subtitle {
+
+    font-size: 13px;
+
+    color: #69757e;
+}
+
+
+/* =========================================================
+   OPTIONS
+========================================================= */
+
+.option {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    background: white;
+
+    border: 1px solid #d8dee3;
+
+    border-radius: 8px;
+
+    padding: 16px;
+
+    margin-bottom: 11px;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.option:hover {
+
+    border-color: #19a974;
+
+    background: #f7fcfa;
+
+    transform: translateY(-1px);
+
+    box-shadow: 0 2px 5px rgba(0,0,0,0.06);
+}
+
+.option input {
+
+    width: 18px;
+
+    height: 18px;
+
+    accent-color: #19a974;
+
+    cursor: pointer;
+
+    flex-shrink: 0;
+}
+
+.option-text {
+
+    font-size: 14px;
+
+    color: #343b40;
+
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   SUBMIT BUTTON
+========================================================= */
+
+.button-area {
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    margin-top: 20px;
+}
+
+.next-btn {
+
+    border: none;
+
+    background: #19a974;
+
+    color: white;
+
+    padding: 12px 24px;
+
+    border-radius: 7px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: all 0.2s ease;
+}
+
+.next-btn:hover {
+
+    background: #14885d;
+
+    box-shadow: 0 3px 8px rgba(25,169,116,0.25);
+
+    transform: translateY(-1px);
+}
+
+
+/* =========================================================
+   SAFETY NOTICE
+========================================================= */
+
+.security-note {
+
+    margin-top: 18px;
+
+    padding: 14px 16px;
+
+    background: #f1f7f4;
+
+    border: 1px solid #d2e9dd;
+
+    border-radius: 7px;
+
+    font-size: 12px;
+
+    color: #53615a;
+
+    line-height: 1.6;
+}
+
+.security-note strong {
+
+    color: #19734f;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.footer {
+
+    text-align: center;
+
+    padding: 25px 0 35px;
+
+    color: #7b858d;
+
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+.email-window,
+.training-header {
+
+    animation: appear 0.35s ease;
+}
+
+@keyframes appear {
+
+    from {
+
+        opacity: 0;
+
+        transform: translateY(8px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform: translateY(0);
+
+    }
+
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media(max-width: 800px) {
+
+    .top-bar {
+
+        padding: 0 18px;
+
+    }
+
+    .training-label {
+
+        display: none;
+
+    }
+
+    .email-content {
+
+        padding: 24px;
+
+    }
+
+    .email-meta {
+
+        display: none;
+
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width: 600px) {
+
+    .page {
+
+        margin-top: 15px;
+
+        padding: 0 10px;
+
+    }
+
+    .training-header {
+
+        padding: 17px;
+
+    }
+
+    .training-top {
+
+        align-items: flex-start;
+
+        gap: 10px;
+
+    }
+
+    .training-title {
+
+        font-size: 16px;
+
+    }
+
+    .scenario-count {
+
+        font-size: 12px;
+
+    }
+
+    .email-content {
+
+        padding: 20px 17px 25px;
+
+    }
+
+    .sender-row {
+
+        gap: 10px;
+
+    }
+
+    .sender-avatar {
+
+        width: 42px;
+
+        height: 42px;
+
+        font-size: 17px;
+
+    }
+
+    .sender-name {
+
+        font-size: 14px;
+
+    }
+
+    .sender-email {
+
+        font-size: 11px;
+
+        word-break: break-all;
+
+    }
+
+    .subject-text {
+
+        font-size: 18px;
+
+    }
+
+    .email-body {
+
+        font-size: 14px;
+
+        line-height: 1.7;
+
+    }
+
+    .decision-area {
+
+        padding: 18px;
+
+    }
+
+    .decision-title {
+
+        font-size: 16px;
+
+    }
+
+    .option {
+
+        padding: 13px;
+
+    }
+
+    .option-text {
+
+        font-size: 13px;
+
+    }
+
+    .button-area {
+
+        justify-content: stretch;
+
+    }
+
+    .next-btn {
+
+        width: 100%;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     TOP BAR
+===================================================== -->
+
+<header class="top-bar">
+
+    <div class="brand">
+
+        <div class="brand-logo">
+            S
+        </div>
+
+        <div class="brand-name">
+            SEVT
+        </div>
+
+    </div>
+
+    <div class="training-label">
+        Social Engineering Vulnerability Tester • Security Awareness Simulation
+    </div>
+
+</header>
+
+
+<!-- =====================================================
+     MAIN PAGE
+===================================================== -->
+
+<main class="page">
+
+
+<!-- =====================================================
+     TRAINING HEADER
+===================================================== -->
+
+<section class="training-header">
+
+    <div class="training-top">
+
+        <div class="training-title">
+            Email Security Assessment
+        </div>
+
+        <div class="scenario-count">
+            Scenario {{ question_number }} of {{ total_questions }}
+        </div>
+
+    </div>
+
+
+    <div class="progress-container">
+
+        <div class="progress"></div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
+     EMAIL WINDOW
+===================================================== -->
+
+<section class="email-window">
+
+
+    <!-- EMAIL TOOLBAR -->
+
+    <div class="email-toolbar">
+
+        <div class="mail-title">
+            Inbox
+        </div>
+
+        <div class="toolbar-icons">
+
+            <span>Archive</span>
+
+            <span>Report</span>
+
+            <span>More</span>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- EMAIL CONTENT -->
+
+    <div class="email-content">
+
+
+        <!-- SENDER -->
+
+        <div class="sender-row">
+
+            <div class="sender-avatar">
+
+                {{ scenario.sender_name[0] }}
+
+            </div>
+
+
+            <div class="sender-details">
+
+                <div class="sender-name">
+
+                    {{ scenario.sender_name }}
+
+                </div>
+
+                <div class="sender-email">
+
+                    &lt;{{ scenario.sender_email }}&gt;
+
+                </div>
+
+            </div>
+
+
+            <div class="email-meta">
+
+                To: You<br>
+
+                Today
+
+            </div>
+
+        </div>
+
+
+
+        <!-- SUBJECT -->
+
+        <div class="subject-area">
+
+            <div class="subject-label">
+                Subject
+            </div>
+
+            <div class="subject-text">
+
+                {{ scenario.subject }}
+
+            </div>
+
+        </div>
+
+
+
+        <!-- EMAIL BODY -->
+
+        <div class="email-body">
+
+            {{ scenario.scenario_text }}
+
+        </div>
+
+
+
+        <!-- LINK -->
+
+        {% if scenario.url %}
+
+        <div class="link-section">
+
+            <div class="link-label">
+
+                LINK INCLUDED IN THIS MESSAGE
+
+            </div>
+
+            <div class="link-preview">
+
+                {{ scenario.url }}
+
+            </div>
+
+        </div>
+
+        {% endif %}
+
+
+
+        <!-- EMAIL ACTIONS -->
+
+        <div class="email-actions">
+
+            <div class="email-action">
+                Reply
+            </div>
+
+            <div class="email-action">
+                Forward
+            </div>
+
+        </div>
+
+
+
+        <!-- =================================================
+             DECISION AREA
+        ================================================== -->
+
+        <div class="decision-area">
+
+
+            <div class="decision-header">
+
+                <div class="decision-title">
+
+                    What would you do?
+
+                </div>
+
+                <div class="decision-subtitle">
+
+                    Review the message carefully and select the safest response.
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ANSWER FORM -->
+
+            <form action="/phishing/submit" method="POST">
+
+
+                <!-- OPTION 1 -->
+
+                <label class="option">
+
+                    <input
+                        type="radio"
+                        name="answer"
+                        value="{{ scenario.option1 }}"
+                        required
+                    >
+
+                    <span class="option-text">
+
+                        {{ scenario.option1 }}
+
+                    </span>
+
+                </label>
+
+
+
+                <!-- OPTION 2 -->
+
+                <label class="option">
+
+                    <input
+                        type="radio"
+                        name="answer"
+                        value="{{ scenario.option2 }}"
+                    >
+
+                    <span class="option-text">
+
+                        {{ scenario.option2 }}
+
+                    </span>
+
+                </label>
+
+
+
+                <!-- OPTION 3 -->
+
+                <label class="option">
+
+                    <input
+                        type="radio"
+                        name="answer"
+                        value="{{ scenario.option3 }}"
+                    >
+
+                    <span class="option-text">
+
+                        {{ scenario.option3 }}
+
+                    </span>
+
+                </label>
+
+
+
+                <!-- BUTTON -->
+
+                <div class="button-area">
+
+                    {% if question_number < total_questions %}
+
+                    <button
+                        type="submit"
+                        class="next-btn"
+                    >
+
+                        Continue to Next Scenario →
+
+                    </button>
+
+                    {% else %}
+
+                    <button
+                        type="submit"
+                        class="next-btn"
+                    >
+
+                        Complete Assessment ✓
+
+                    </button>
+
+                    {% endif %}
+
+                </div>
+
+
+            </form>
+
+        </div>
+
+
+
+        <!-- SECURITY NOTE -->
+
+        <div class="security-note">
+
+            <strong>Security awareness reminder:</strong>
+
+            Examine the sender address, wording, urgency, links,
+            and requested actions before deciding how to respond.
+
+            This simulation is designed for security awareness training.
+
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+<!-- FOOTER -->
+
+<footer class="footer">
+
+    SEVT • Social Engineering Vulnerability Tester using AI
+
+</footer>
+
+
+</main>
+
+
+</body>
+
+</html>

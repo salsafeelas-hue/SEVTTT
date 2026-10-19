@@ -1,0 +1,1120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>SEVT - OTP Security Verification</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+
+        body {
+
+            min-height: 100vh;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            color: #eafaff;
+
+            background:
+
+                radial-gradient(
+                    circle at top left,
+                    #092333,
+                    #020b12 45%,
+                    #010509
+                );
+
+            display: flex;
+
+            justify-content: center;
+
+            align-items: center;
+
+            padding: 30px 15px;
+
+        }
+
+
+        /* BACKGROUND GRID */
+
+        body::before {
+
+            content: "";
+
+            position: fixed;
+
+            inset: 0;
+
+            background-image:
+
+                linear-gradient(
+                    rgba(0, 234, 255, 0.035) 1px,
+                    transparent 1px
+                ),
+
+                linear-gradient(
+                    90deg,
+                    rgba(0, 234, 255, 0.035) 1px,
+                    transparent 1px
+                );
+
+            background-size: 40px 40px;
+
+            pointer-events: none;
+
+        }
+
+
+        /* MAIN */
+
+        .page {
+
+            width: 100%;
+
+            max-width: 900px;
+
+            position: relative;
+
+            z-index: 1;
+
+        }
+
+
+        /* HEADER */
+
+        .header {
+
+            text-align: center;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .logo {
+
+            color: #00eaff;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            letter-spacing: 5px;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .header h1 {
+
+            font-size: 30px;
+
+            color: white;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .header p {
+
+            color: #8baab5;
+
+            font-size: 14px;
+
+        }
+
+
+        /* PROGRESS */
+
+        .progress-area {
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .progress-info {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            color: #75919c;
+
+            font-size: 13px;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .progress-bar {
+
+            width: 100%;
+
+            height: 6px;
+
+            background: #0b202b;
+
+            border-radius: 10px;
+
+            overflow: hidden;
+
+        }
+
+
+        .progress-fill {
+
+            height: 100%;
+
+            width:
+                calc(
+                    ({{ question_number }} / {{ total_questions }})
+                    * 100%
+                );
+
+            background: #00eaff;
+
+            border-radius: 10px;
+
+            box-shadow:
+                0 0 12px
+                rgba(0, 234, 255, 0.6);
+
+        }
+
+
+        /* PHONE */
+
+        .phone-wrapper {
+
+            display: flex;
+
+            justify-content: center;
+
+            margin-bottom: 25px;
+
+        }
+
+
+        .phone {
+
+            width: 390px;
+
+            max-width: 100%;
+
+            background: #050c12;
+
+            border: 8px solid #18252d;
+
+            border-radius: 35px;
+
+            box-shadow:
+
+                0 0 0 2px #071017,
+
+                0 25px 60px
+                rgba(0, 0, 0, 0.55),
+
+                0 0 30px
+                rgba(0, 234, 255, 0.08);
+
+            overflow: hidden;
+
+        }
+
+
+        /* PHONE TOP */
+
+        .phone-top {
+
+            height: 28px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding: 0 18px;
+
+            color: #8da6af;
+
+            font-size: 10px;
+
+            background: #03080c;
+
+        }
+
+
+        .phone-notch {
+
+            width: 90px;
+
+            height: 18px;
+
+            background: #000;
+
+            border-radius: 0 0 12px 12px;
+
+            margin: -1px auto 0;
+
+        }
+
+
+        /* APP HEADER */
+
+        .app-header {
+
+            padding: 18px;
+
+            background:
+
+                linear-gradient(
+                    135deg,
+                    #09212d,
+                    #07131b
+                );
+
+            border-bottom:
+                1px solid
+                rgba(0, 234, 255, 0.15);
+
+        }
+
+
+        .app-title {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+        }
+
+
+        .app-icon {
+
+            width: 42px;
+
+            height: 42px;
+
+            border-radius: 12px;
+
+            background:
+                rgba(0, 234, 255, 0.1);
+
+            border:
+                1px solid
+                rgba(0, 234, 255, 0.3);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 20px;
+
+        }
+
+
+        .app-title strong {
+
+            display: block;
+
+            color: white;
+
+            font-size: 14px;
+
+            margin-bottom: 3px;
+
+        }
+
+
+        .app-title span {
+
+            color: #718b95;
+
+            font-size: 11px;
+
+        }
+
+
+        /* CHAT */
+
+        .chat {
+
+            padding: 22px 15px;
+
+            background:
+
+                radial-gradient(
+                    circle at center,
+                    #07131b,
+                    #03080d
+                );
+
+        }
+
+
+        .date {
+
+            text-align: center;
+
+            color: #617983;
+
+            font-size: 10px;
+
+            margin-bottom: 18px;
+
+        }
+
+
+        .message {
+
+            max-width: 90%;
+
+            background: #10232d;
+
+            border:
+                1px solid
+                rgba(0, 234, 255, 0.12);
+
+            border-radius:
+                4px 16px 16px 16px;
+
+            padding: 15px;
+
+            color: #d5e7ec;
+
+            font-size: 13px;
+
+            line-height: 1.65;
+
+            margin-bottom: 12px;
+
+        }
+
+
+        .sender {
+
+            color: #00eaff;
+
+            font-size: 11px;
+
+            font-weight: bold;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .otp-highlight {
+
+            display: inline-block;
+
+            margin: 10px 0;
+
+            padding: 8px 13px;
+
+            background:
+                rgba(255, 193, 7, 0.08);
+
+            border:
+                1px solid
+                rgba(255, 193, 7, 0.25);
+
+            border-radius: 7px;
+
+            color: #ffd76a;
+
+            font-weight: bold;
+
+            letter-spacing: 3px;
+
+        }
+
+
+        /* CONTEXT */
+
+        .context {
+
+            margin-top: 12px;
+
+            padding: 14px;
+
+            background:
+                rgba(0, 234, 255, 0.035);
+
+            border:
+                1px solid
+                rgba(0, 234, 255, 0.1);
+
+            border-radius: 10px;
+
+            color: #91abb4;
+
+            font-size: 11px;
+
+            line-height: 1.6;
+
+        }
+
+
+        .context-title {
+
+            color: #00eaff;
+
+            font-weight: bold;
+
+            margin-bottom: 5px;
+
+        }
+
+
+        /* ATTENTION */
+
+        .attention {
+
+            margin-top: 14px;
+
+            padding: 12px;
+
+            border-radius: 9px;
+
+            background:
+                rgba(255, 94, 94, 0.06);
+
+            border:
+                1px solid
+                rgba(255, 94, 94, 0.18);
+
+            color: #d4a7a7;
+
+            font-size: 11px;
+
+            line-height: 1.5;
+
+        }
+
+
+        /* DECISION AREA */
+
+        .decision {
+
+            background:
+
+                rgba(4, 18, 27, 0.95);
+
+            border:
+                1px solid
+                rgba(0, 234, 255, 0.18);
+
+            border-radius: 18px;
+
+            padding: 25px;
+
+        }
+
+
+        .decision h2 {
+
+            color: #00eaff;
+
+            font-size: 19px;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .decision-subtitle {
+
+            color: #78949f;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        /* OPTIONS */
+
+        .option {
+
+            position: relative;
+
+            margin-bottom: 12px;
+
+        }
+
+
+        .option input {
+
+            position: absolute;
+
+            opacity: 0;
+
+        }
+
+
+        .option label {
+
+            display: block;
+
+            padding: 16px;
+
+            border:
+                1px solid
+                rgba(0, 234, 255, 0.13);
+
+            border-radius: 11px;
+
+            background:
+                rgba(0, 234, 255, 0.025);
+
+            color: #c4d8de;
+
+            cursor: pointer;
+
+            transition: 0.2s ease;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+
+        }
+
+
+        .option label:hover {
+
+            border-color:
+                rgba(0, 234, 255, 0.4);
+
+            background:
+                rgba(0, 234, 255, 0.06);
+
+        }
+
+
+        .option input:checked + label {
+
+            border-color: #00eaff;
+
+            background:
+                rgba(0, 234, 255, 0.09);
+
+            color: white;
+
+            box-shadow:
+                0 0 15px
+                rgba(0, 234, 255, 0.08);
+
+        }
+
+
+        .option-number {
+
+            display: inline-flex;
+
+            width: 27px;
+
+            height: 27px;
+
+            border-radius: 50%;
+
+            align-items: center;
+
+            justify-content: center;
+
+            margin-right: 10px;
+
+            background:
+                rgba(0, 234, 255, 0.08);
+
+            color: #00eaff;
+
+            font-weight: bold;
+
+            font-size: 12px;
+
+        }
+
+
+        /* BUTTON */
+
+        .submit-btn {
+
+            width: 100%;
+
+            margin-top: 10px;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 10px;
+
+            background: #00eaff;
+
+            color: #001015;
+
+            font-size: 14px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s ease;
+
+        }
+
+
+        .submit-btn:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow:
+                0 0 20px
+                rgba(0, 234, 255, 0.35);
+
+        }
+
+
+        /* WARNING */
+
+        .warning {
+
+            margin-top: 18px;
+
+            padding: 15px;
+
+            border-radius: 10px;
+
+            background:
+                rgba(255, 193, 7, 0.04);
+
+            border:
+                1px solid
+                rgba(255, 193, 7, 0.16);
+
+            color: #b8a97d;
+
+            font-size: 11px;
+
+            line-height: 1.6;
+
+        }
+
+
+        .warning strong {
+
+            color: #ffd45c;
+
+        }
+
+
+        /* BOTTOM */
+
+        .bottom-text {
+
+            text-align: center;
+
+            margin-top: 18px;
+
+            color: #506873;
+
+            font-size: 11px;
+
+        }
+
+
+        /* MOBILE */
+
+        @media (max-width: 500px) {
+
+            body {
+
+                padding: 18px 10px;
+
+                align-items: flex-start;
+
+            }
+
+
+            .header h1 {
+
+                font-size: 23px;
+
+            }
+
+
+            .phone {
+
+                border-width: 6px;
+
+                border-radius: 28px;
+
+            }
+
+
+            .decision {
+
+                padding: 18px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="page">
+
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div class="logo">
+            SEVT
+        </div>
+
+        <h1>
+            OTP Security Verification
+        </h1>
+
+        <p>
+            Social Engineering Vulnerability Simulation
+        </p>
+
+    </div>
+
+
+    <!-- PROGRESS -->
+
+    <div class="progress-area">
+
+        <div class="progress-info">
+
+            <span>
+                Scenario {{ question_number }}
+            </span>
+
+            <span>
+                {{ question_number }} / {{ total_questions }}
+            </span>
+
+        </div>
+
+
+        <div class="progress-bar">
+
+            <div class="progress-fill"></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- PHONE -->
+
+    <div class="phone-wrapper">
+
+
+        <div class="phone">
+
+
+            <!-- PHONE STATUS -->
+
+            <div class="phone-top">
+
+                <span>
+                    10:42
+                </span>
+
+                <div class="phone-notch"></div>
+
+                <span>
+                    ●●● 100%
+                </span>
+
+            </div>
+
+
+            <!-- APP HEADER -->
+
+            <div class="app-header">
+
+                <div class="app-title">
+
+                    <div class="app-icon">
+                        🔐
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            {{ scenario.sender_name }}
+                        </strong>
+
+                        <span>
+                            {{ scenario.sender_type }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- MESSAGE -->
+
+            <div class="chat">
+
+
+                <div class="date">
+                    TODAY
+                </div>
+
+
+                <div class="message">
+
+
+                    <div class="sender">
+
+                        {{ scenario.sender_name }}
+
+                    </div>
+
+
+                    <div>
+
+                        {{ scenario.message_text }}
+
+                    </div>
+
+
+                    {% if "OTP" in scenario.message_text %}
+
+                    <div class="otp-highlight">
+
+                        6-DIGIT OTP
+
+                    </div>
+
+                    {% endif %}
+
+
+                </div>
+
+
+                <!-- CONTEXT -->
+
+                <div class="context">
+
+                    <div class="context-title">
+                        SITUATION
+                    </div>
+
+                    {{ scenario.otp_context }}
+
+                </div>
+
+
+                <div class="attention">
+
+                    ⚠️ <strong>Security reminder:</strong>
+
+                    Never reveal an OTP, password,
+                    PIN or authentication code to
+                    another person.
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- DECISION -->
+
+    <form
+        method="POST"
+        class="decision"
+    >
+
+
+        <h2>
+            What would you do?
+        </h2>
+
+
+        <p class="decision-subtitle">
+
+            Choose the action that you believe
+            is safest in this situation.
+
+        </p>
+
+
+        <!-- OPTION 1 -->
+
+        <div class="option">
+
+            <input
+                type="radio"
+                id="option1"
+                name="answer"
+                value="1"
+                required
+            >
+
+
+            <label for="option1">
+
+                <span class="option-number">
+                    1
+                </span>
+
+                {{ scenario.user_action_1 }}
+
+            </label>
+
+        </div>
+
+
+        <!-- OPTION 2 -->
+
+        <div class="option">
+
+            <input
+                type="radio"
+                id="option2"
+                name="answer"
+                value="2"
+            >
+
+
+            <label for="option2">
+
+                <span class="option-number">
+                    2
+                </span>
+
+                {{ scenario.user_action_2 }}
+
+            </label>
+
+        </div>
+
+
+        <!-- OPTION 3 -->
+
+        <div class="option">
+
+            <input
+                type="radio"
+                id="option3"
+                name="answer"
+                value="3"
+            >
+
+
+            <label for="option3">
+
+                <span class="option-number">
+                    3
+                </span>
+
+                {{ scenario.user_action_3 }}
+
+            </label>
+
+        </div>
+
+
+        <!-- SUBMIT -->
+
+        <button
+            type="submit"
+            class="submit-btn"
+        >
+
+            Analyze My Decision →
+
+        </button>
+
+
+        <!-- WARNING -->
+
+        <div class="warning">
+
+            <strong>
+                🔒 Awareness Tip
+            </strong>
+
+            <br><br>
+
+            Legitimate services may send OTPs,
+            but you should never read an OTP
+            to an unexpected caller, support
+            representative or another person.
+
+            Only enter an OTP yourself into
+            the official service you intentionally
+            accessed.
+
+        </div>
+
+
+    </form>
+
+
+    <div class="bottom-text">
+
+        SEVT • Cybersecurity Awareness Training
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>
